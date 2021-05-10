@@ -1,3 +1,5 @@
+//Add new code right now
+//I'm a programmer
 #pragma once
 #include "varsANDlibs.h"
 #include "consoleControl.h"
@@ -5,6 +7,8 @@
 #include "gameControl.h"
 using namespace std;
 
+
+//Test Git push
 
 int main()
 {
