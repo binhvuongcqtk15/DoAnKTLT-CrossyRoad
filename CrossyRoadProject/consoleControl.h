@@ -11,8 +11,6 @@ void FixConsoleWindow() {
 }
 
 void subThread() {
-	bool stop = false;
-	int demstop = 49;
 	while (1) {
 		if (state) {
 			switch (direction) {
@@ -22,15 +20,11 @@ void subThread() {
 			case 'S': moveDown(); break;
 			}
 			direction = ' ';
-			if (stop)	demstop++;
-			else	demstop--;
-			if (demstop == 0 || demstop == 50)	stop = !stop;
-			if (!stop) {
-				eraseCars();
-				moveCars();
-				drawCars("=");
-				drawBoard(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
-			}
+			eraseCars();
+			moveCars();
+			drawCars("=");
+			drawInfo();
+			drawBoard(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
 			if (isImpact(player, player.y)) {
 				processDead();
 			}
@@ -40,7 +34,6 @@ void subThread() {
 				else
 					processPass(player);
 			}
-			Sleep(10);
 		}
 	}
 }

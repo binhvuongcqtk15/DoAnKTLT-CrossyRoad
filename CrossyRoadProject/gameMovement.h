@@ -4,6 +4,7 @@
 using namespace std;
 
 void moveRight() {
+	step++;
 	if (player.x < WIDTH_CONSOLE - 1) {
 		drawCharacter(player, " ");
 		player.x++;
@@ -12,6 +13,7 @@ void moveRight() {
 }
 void moveLeft() {
 	if (player.x > 1) {
+		step++;
 		drawCharacter(player, " ");
 		player.x--;
 		drawCharacter(player, "Y");
@@ -19,6 +21,7 @@ void moveLeft() {
 }
 void moveDown() {
 	if (player.y < PLAYGROUND_SECTION_HEIGHT - 1) {
+		step++;
 		drawCharacter(player, " ");
 		player.y++;
 		drawCharacter(player, "Y");
@@ -26,6 +29,7 @@ void moveDown() {
 }
 void moveUp() {
 	if (player.y > 1) {
+		step++;
 		drawCharacter(player, " ");
 		player.y--;
 		drawCharacter(player, "Y");

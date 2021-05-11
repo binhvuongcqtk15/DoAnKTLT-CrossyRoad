@@ -53,42 +53,49 @@ using namespace std;
 	DrawCars("=");
 	drawCharacter(player,"Y");
 }*/
-int main()
-{
+int main() {
 	int temp;
 	FixConsoleWindow();
 	srand(time(NULL));
 	thread t1(subThread);
 	startMenu();
 	temp=toupper(_getch());
-	if (temp=='T')
-	{
-		resetData();
-		pauseGame(t1.native_handle());
-		GotoXY(0, PLAYGROUND_SECTION_HEIGHT + 2);
-		printf("Type name: ");
-		//gets(player_name);
-		//ReGame(player_name);
-		state = true;
+	while (1) {
+		if (temp == 'L') {
+			resetData();
+			pauseGame(t1.native_handle());
+			GotoXY(0, PLAYGROUND_SECTION_HEIGHT + 2);
+			printf("Type name: ");
+			getline(cin, player_name);
+			//ReGame(player_name);
+			state = true;
+			break;
+		}
+		else if (temp == 'N') {
+			startGame();
+			break;
+		}
+		else if (temp == 27)
+			exit(1);
+		else if (temp == 'A') {
+
+		}
+		else {
+
+		}
 	}
-	else
-		startGame();
-	while (1)
-	{
+
+	while (1) {
 		temp = toupper(_getch());
-		if (state)
-		{
-			if (temp == 27)
-			{
+		if (state) {
+			if (temp == 27) {
 				exitGame(t1.native_handle());
 				return 0;
 			}
-			else if (temp == 'P')
-			{
+			else if (temp == 'P') {
 			 	pauseGame(t1.native_handle());
 			}
-			else if (temp == 'L')
-			{
+			else if (temp == 'L') {
 				pauseGame(t1.native_handle());
 				GotoXY(0, PLAYGROUND_SECTION_HEIGHT + 2);
 				printf("Type name: ");
@@ -96,30 +103,25 @@ int main()
 				//SaveGame(player_name);
 				exitGame(t1.native_handle());
 			}
-			else if (temp=='T')
-			{
+			else if (temp=='L') {
 				pauseGame(t1.native_handle());
 				GotoXY(0, PLAYGROUND_SECTION_HEIGHT + 2);
 				printf("Type name: ");
 				//gets(player_name);
 				//ReGame(player_name);
 			}
-			else
-			{
+			else {
 				ResumeThread((HANDLE)t1.native_handle());
 				if (temp == 'D' || temp == 'A' || temp == 'W' || temp == 'S')
-				{
 					direction = temp;
-				}
 			}
 		}
-		else
-		{
-			if (temp == 'Y') startGame();
-			else
-			{
+		else {
+			if (temp == 'R') startGame();
+			else {
 				exitGame(t1.native_handle());
-				return 0;			}
+				return 0;
+			}
 		}
 	}
 }

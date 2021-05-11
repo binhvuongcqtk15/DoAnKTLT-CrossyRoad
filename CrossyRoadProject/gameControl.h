@@ -13,7 +13,7 @@ void GotoXY(int x, int y) {
 void resetData() {
 	direction = 'D';
 	speed = 1;
-	player.x = 45; player.y = 19;
+	player = DEFAULT_CHARACTER_POS;
 	if (carArray == NULL) {
 		carArray = new POINT * [MAX_CAR];
 		for (int i = 0; i < MAX_CAR; i++)
@@ -22,7 +22,7 @@ void resetData() {
 			int temp = (rand() % (WIDTH_CONSOLE - MAX_CAR_LENGTH)) + 1;
 			for (int j = 0; j < MAX_CAR_LENGTH; j++){
 				carArray[i][j].x = temp + j;
-				carArray[i][j].y = 2 + i;
+				carArray[i][j].y = 3 + i;
 			}
 		}
 	}
@@ -30,19 +30,20 @@ void resetData() {
 }
 
 bool isImpact(const POINT& p, int d) {
-	if (d == 1 || d == 19)
+	if (d == 2 || d == 24)
 		return false;
 	for (int i = 0; i < MAX_CAR_LENGTH; i++)
-		if (p.x == carArray[d - 2][i].x && p.y == carArray[d - 2][i].y) 
+		if (p.x == carArray[d - 3][i].x && p.y == carArray[d - 3][i].y) 
 			return true;
 	return false;
 }
 
 void processDead() {
 	state = 0;
-	GotoXY(0, PLAYGROUND_SECTION_HEIGHT + 2);
-	cout << "You're hit by a Car (T.T) \n";
-	cout << "Press C to continue or any keys to exit";
+	GotoXY(46, PLAYGROUND_SECTION_HEIGHT + 2);
+	cout << "You're hit by a Car (T.T)";
+	GotoXY(38, PLAYGROUND_SECTION_HEIGHT + 3);
+	cout << "Press R to restart or any keys to exit";
 }
 
 void processPass(POINT& p) {
@@ -55,7 +56,8 @@ void processPass(POINT& p) {
 void drawBoard(int x, int y, int width, int height) {
 	GotoXY(x, y);
 	if (y == 0) {
-		cout << "------------------------------------------------------Crossy Road------------------------------------------------------\n";
+		cout << "------------------------------------------------------Crossy Road";
+		cout << "------------------------------------------------------\n";
 		y++;
 	}
 	GotoXY(x, y);
@@ -77,7 +79,7 @@ void drawBoard(int x, int y, int width, int height) {
 	GotoXY(0, 0);
 }
 
-void drawCars(const char* s) {
+void drawCars(string s) {
 	for (int i = 0; i < MAX_CAR; i++) {
 		for (int j = 0; j < MAX_CAR_LENGTH; j++) {
 			GotoXY(carArray[i][j].x, carArray[i][j].y);
@@ -85,9 +87,18 @@ void drawCars(const char* s) {
 		}
 	}
 }
-void drawCharacter(const POINT& p, const char* s) {
+void drawCharacter(const POINT& p, string s) {
 	GotoXY(p.x, p.y);
 	cout << s;
+}
+
+void drawInfo() {
+	GotoXY(5, HEIGHT_CONSOLE - 2);
+	cout << "Player Name: " << player_name;
+	GotoXY(5, HEIGHT_CONSOLE - 1);
+	cout << "Level: " << speed;
+	GotoXY(5, HEIGHT_CONSOLE);
+	cout << "Number of steps: " << step;
 }
 
 void moveCars() {

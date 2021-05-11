@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "varsANDlibs.h"
 #include "consoleControl.h"
 #include "gameControl.h"
@@ -10,10 +10,22 @@ void deleteCarArray() {
 	delete[] carArray;
 }
 
-void startMenu()
-{
-	GotoXY(45, 10); printf("Tai lai Game (Nhan phim T)");
-	GotoXY(45, 11); printf("Bat dau choi (Phim bat ki)");
+void startMenu() {
+	GotoXY(12, 5); cout << "OOOOOO   OOOOOO   OOOOOOO   OOOOOO   OOOOOO   OO  OO       OOOOOO   OOOOOOO   OOOOOOO   OOOOO";
+	GotoXY(12, 6); cout << "OO       OO  OO   OO   OO   OO       OO       OO  OO       OO  OO   OO   OO   OO   OO   OO  OO"; 
+	GotoXY(12, 7); cout << "OO       OO OO    OO   OO   OOOOOO   OOOOOO     OO    ===  OO OO    OO   OO   OOOOOOO   OO   OO"; 
+	GotoXY(12, 8); cout << "OO       OO  OO   OO   OO       OO       OO     OO         OO  OO   OO   OO   OO   OO   OO  OO"; 
+	GotoXY(12, 9); cout << "OOOOOO   OO   OO  OOOOOOO   OOOOOO   OOOOOO     OO         OO   OO  OOOOOOO   OO   OO   OOOOO";
+	
+	GotoXY(48, 12); cout << "+-----------+-------+";
+	GotoXY(48, 13); cout << "|  Option   | Press |";
+	GotoXY(48, 14); cout << "|-----------+-------+";
+	GotoXY(48, 15); cout << "| New Game  |   N   |";
+	GotoXY(48, 16); cout << "| Load Game |   L   |";
+	GotoXY(48, 17); cout << "| Exit      |  Esc  |";
+	GotoXY(48, 18); cout << "| About     |   O   |";
+	GotoXY(48, 19); cout << "+-----------+-------+";
+	GotoXY(0, 0);
 }
 
 void startGame() {
