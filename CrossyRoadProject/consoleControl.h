@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "varsANDlibs.h"
 #include "gameMovement.h"
 using namespace std;
@@ -11,35 +11,36 @@ void FixConsoleWindow() {
 }
 
 void subThread() {
+	bool stop = false;
+	int demstop = 49;
 	while (1) {
 		if (state) {
-			//cerr << "OK";
-			if(direction == int('A'))
-				moveLeft();
-			else if(direction == int('D'))
-				moveRight();
-			else if (direction == int('W')) {
-				//cout << "move start";
-				moveUp();
-				cout << "moveOK";
+			switch (direction) {
+			case 'A': moveLeft(); break;
+			case 'D': moveRight(); break;
+			case 'W': moveUp(); break;
+			case 'S': moveDown(); break;
 			}
-			else if(direction == int('S'))
-				moveDown();
 			direction = ' ';
-			eraseCars();
-			moveCars();
-			drawCars('=');
-			cout << "OK1";
-			//drawBoard(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
-			//drawBoard(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
-			if (isImpact(player, player.y))
+			if (stop)	demstop++;
+			else	demstop--;
+			if (demstop == 0 || demstop == 50)	stop = !stop;
+			if (!stop) {
+				eraseCars();
+				moveCars();
+				drawCars("=");
+				drawBoard(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
+			}
+			if (isImpact(player, player.y)) {
 				processDead();
-			cout << "OK2";
-			if (player.y == 2)
-				processPass(player);
-			cout << "OK";
+			}
+			if (player.y == 2) {
+				if (player.x == currpos[0] || player.x == currpos[1]) 
+					processDead();
+				else
+					processPass(player);
+			}
 			Sleep(10);
-			cout << "OKK";
 		}
 	}
 }
