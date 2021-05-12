@@ -5,33 +5,33 @@ using namespace std;
 
 void moveRight() {
 	step++;
-	if (player.x < WIDTH_CONSOLE - 1) {
-		drawCharacter(player, " ");
-		player.x++;
-		drawCharacter(player, "Y");
+	if (player_pos.x < WIDTH_CONSOLE - 1) {
+		drawCharacter(player_pos, " ");
+		player_pos.x++;
+		drawCharacter(player_pos, "Y");
 	}
 }
 void moveLeft() {
-	if (player.x > 1) {
+	if (player_pos.x > 1) {
 		step++;
-		drawCharacter(player, " ");
-		player.x--;
-		drawCharacter(player, "Y");
+		drawCharacter(player_pos, " ");
+		player_pos.x--;
+		drawCharacter(player_pos, "Y");
 	}
 }
 void moveDown() {
-	if (player.y < PLAYGROUND_SECTION_HEIGHT - 1) {
+	if (player_pos.y < PLAYGROUND_SECTION_HEIGHT - 1) {
 		step++;
-		drawCharacter(player, " ");
-		player.y++;
-		drawCharacter(player, "Y");
+		drawCharacter(player_pos, " ");
+		player_pos.y++;
+		drawCharacter(player_pos, "Y");
 	}
 }
 void moveUp() {
-	if (player.y > 1) {
+	if (player_pos.y > 1) {
 		step++;
-		drawCharacter(player, " ");
-		player.y--;
-		drawCharacter(player, "Y");
+		drawCharacter(player_pos, " ");
+		player_pos.y--;
+		drawCharacter(player_pos, "Y");
 	}
 }
