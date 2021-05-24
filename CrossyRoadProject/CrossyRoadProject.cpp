@@ -11,14 +11,20 @@ int main() {
 	srand(time(NULL));
 	thread t1(subThread);
 	startMenu();
-	temp=toupper(_getch());
 	while (1) {
+		temp = toupper(_getch());
 		if (temp == 'L') {
 			resetData();
 			pauseGame(t1.native_handle());
 			GotoXY(0, PLAYGROUND_SECTION_HEIGHT + 2);
 			printf("Type name: ");
-			getline(cin, player_name);
+			while(1) {
+				getline(cin, player_name);
+				if (!isFileExist(player_name))
+					cout << "Can't find " << player_name << "'s data. Please re-enter: ";
+				else
+					break;
+			}
 			loadGame(player_name, player_pos);
 			state = true;
 			break;
@@ -30,11 +36,11 @@ int main() {
 		else if (temp == 27)
 			exit(1);
 		else if (temp == 'O') {
-
+			system("cls");
 		}
 		else {
-			clearBoard(0, 0, WIDTH_CONSOLE, HEIGHT_CONSOLE);
-			break;
+			GotoXY(5, 25);
+			cout << "It's not an option. Please Re-enter: ";
 		}
 	}
 
@@ -43,17 +49,18 @@ int main() {
 		if (state) {
 			if (temp == 27) {
 				exitGame(t1.native_handle());
-				return 0;
+				exit(0);
 			}
 			else if (temp == 'P') {
 			 	pauseGame(t1.native_handle());
 			}
 			else if (temp == 'K') {
 				pauseGame(t1.native_handle());
+				//debug(25, 40);
 				if (player_name == DEFAULT_PLAYER_NAME) {
 					clearBoard(1, PLAYGROUND_SECTION_HEIGHT + 2, WIDTH_CONSOLE - 2, INFO_SECTION_HEIGHT - 2);
-					GotoXY(54, PLAYGROUND_SECTION_HEIGHT + 3);
-					printf("Type name: ");
+					GotoXY(50, PLAYGROUND_SECTION_HEIGHT + 3);
+					cout << "Type name: ";
 					getline(cin, player_name);
 				}
 				saveGame(player_name, player_pos);
@@ -66,7 +73,9 @@ int main() {
 			}
 		}
 		else {
-			if (temp == 'R') startGame();
+			if (temp == 'R') {
+				startGame();
+			}
 			else {
 				exitGame(t1.native_handle());
 				return 0;

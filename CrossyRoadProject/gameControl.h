@@ -1,6 +1,5 @@
 #pragma once
 #include "varsANDlibs.h"
-#include "consoleControl.h"
 using namespace std;
 
 void GotoXY(int x, int y) {
@@ -16,26 +15,26 @@ void resetData() {
 	step = 0;
 	player_name = DEFAULT_PLAYER_NAME;
 	player_pos = DEFAULT_CHARACTER_POS;
-	if (carArray == NULL) {
-		carArray = new POINT * [MAX_CAR];
-		for (int i = 0; i < MAX_CAR; i++)
-			carArray[i] = new POINT[MAX_CAR_LENGTH];
-		for (int i = 0; i < MAX_CAR; i++) {
-			int temp = (rand() % (WIDTH_CONSOLE - MAX_CAR_LENGTH)) + 1;
-			for (int j = 0; j < MAX_CAR_LENGTH; j++){
-				carArray[i][j].x = temp + j;
-				carArray[i][j].y = 3 + i;
-			}
-		}
+	if (carArray == NULL)
+		carArray = new int* [MAX_CAR];
+	if (carInfo == NULL)
+		carInfo = new CAR[MAX_CAR];
+	for (int i = 0; i < MAX_CAR; i++) {
+		carInfo[i].direction = rand() % 2;
+		carInfo[i].length = MIN_CAR_LENGTH + rand() % (MAX_CAR_LENGTH - MIN_CAR_LENGTH + 1);
+		carArray[i] = new int[carInfo[i].length];
+		int temp = (rand() % (WIDTH_CONSOLE - carInfo[i].length)) + 1;
+		for (int j = 0; j < carInfo[i].length; j++)
+			carArray[i][j] = temp + j; 
 	}
 	memset(prevPos, 0, sizeof(prevPos));
 }
 
-bool isImpact(const POINT& p, int d) {
-	if (d == 2 || d == 24)
+bool isImpact(const POINT& p) {
+	if (player_pos.y == 2 || player_pos.y == 24)
 		return false;
-	for (int i = 0; i < MAX_CAR_LENGTH; i++)
-		if (p.x == carArray[d - 3][i].x && p.y == carArray[d - 3][i].y) 
+	for (int i = 0; i < carInfo[player_pos.y - 3].length; i++)
+		if (p.x == carArray[player_pos.y - 3][i])
 			return true;
 	return false;
 }
@@ -49,36 +48,65 @@ void clearBoard(int x, int y, int width, int height) {
 	}
 }
 
-void drawBoard(int x, int y, int width, int height) {
+void drawSelectBox(int x, int y, int width, int height) {
+	for (int i = x; i < x + width; ++i) {
+		GotoXY(i, y);
+		cout << char(196);
+		GotoXY(i, y + height);
+		cout << char(196);
+	}
+	for (int i = y; i < y + height; ++i) {
+		GotoXY(x, i);
+		cout << char(179);
+		GotoXY(x + width - 4, i);
+		cout << char(179);
+		GotoXY(x + width, i);
+		cout << char(179);
+	}
+
+	GotoXY(x, y); cout << char(218);
+	GotoXY(x + width - 4, y); cout << char(194);
+	GotoXY(x, y + height); cout << char(192);
+	GotoXY(x + width - 4, y + height); cout << char(193);
+	GotoXY(x + width, y); cout << char(191);
+	GotoXY(x + width, y + height); cout << char(217);
+}
+
+void drawPlayGround(int x, int y, int width, int height) {
 	GotoXY(x, y);
 	if (y == 0) {
-		cout << "------------------------------------------------------Crossy Road";
-		cout << "------------------------------------------------------\n";
+		cout << char(218);
+		for (int i = 1; i <= 52; ++i)
+			cout << char(196);
+		cout << " Crossy Road ";
+		for (int i = 1; i <= 52; ++i)
+			cout << char(196);
+		cout << char(191) << "\n";
 		y++;
 	}
 	GotoXY(x, y);
-	cout << "+";
+	cout << char(195);
 	for (int i = x + 1; i < x + width; i++)
-		cout << "-";
-	cout << "+";
+		cout << char(196);
+	cout << char(180);
 	GotoXY(x, height + y);
-	cout << "+";
+	cout << char(192);
 	for (int i = x + 1; i < x + width; i++)
-		cout << "-";
-	cout << "+";
+		cout << char(196);
+	cout << char(217);
 	for (int i = y + 1; i < height + y; i++) {
 		GotoXY(x, i);
-		cout << "|";
+		cout << char(179);
 		GotoXY(x + width, i);
-		cout << "|";
+		cout << char(179);
 	}
 	GotoXY(0, 0);
 }
 
 void drawCars(string s) {
 	for (int i = 0; i < MAX_CAR; i++) {
-		for (int j = 0; j < MAX_CAR_LENGTH; j++) {
-			GotoXY(carArray[i][j].x, carArray[i][j].y);
+		for (int j = 0; j < carInfo[i].length; j++) {
+			GotoXY(carArray[i][j], i + 3);
 			cout << s;
 		}
 	}
@@ -93,22 +121,21 @@ void drawInfo() {
 	GotoXY(5, HEIGHT_CONSOLE - 1); cout << "Level: " << speed;
 	GotoXY(5, HEIGHT_CONSOLE - 0); cout << "Number of steps: " << step;
 
-	for (int i = 0; i < INFO_SECTION_HEIGHT; ++i) {
+	for (int i = 0; i < INFO_SECTION_HEIGHT - 1; ++i) {
 		GotoXY(50, HEIGHT_CONSOLE - i);
-		cout << "|";
+		cout << char(179);
 		GotoXY(74, HEIGHT_CONSOLE - i);
-		cout << "|";
+		cout << char(179);
 		GotoXY(98, HEIGHT_CONSOLE - i);
-		cout << "|";
+		cout << char(179);
 	}
 
-	GotoXY(51, HEIGHT_CONSOLE - 1); cout << " Move   -->   W,A,S,D ";
+	GotoXY(51, HEIGHT_CONSOLE - 1); cout << " Move   " << char(16) << "   W,A,S,D ";
+	GotoXY(75, HEIGHT_CONSOLE - 2); cout << " Pause Game    " << char(16) << "   P";
+	GotoXY(75, HEIGHT_CONSOLE - 1); cout << " Save Game     " << char(16) << "   K";
+	GotoXY(75, HEIGHT_CONSOLE - 0); cout << " Restart Game  " << char(16) << "   R";
 
-	GotoXY(75, HEIGHT_CONSOLE - 2); cout << " Pause Game   -->   P ";
-	GotoXY(75, HEIGHT_CONSOLE - 1); cout << " Save Game    -->   K ";
-	GotoXY(75, HEIGHT_CONSOLE - 0); cout << " Restart Game -->   R ";
-
-	GotoXY(99, HEIGHT_CONSOLE - 1); cout << " Exit   -->   Esc ";
+	GotoXY(99, HEIGHT_CONSOLE - 1); cout << " Exit   " << char(16) << "   Esc ";
 }
 
 void processDead() {
@@ -125,51 +152,58 @@ void processPass(POINT& p) {
 	if (speed == MAX_SPEED) {
 		speed = 1;
 	}
-	else
+	else {
 		speed++;
+		for (int i = 0; i < MAX_CAR; ++i)
+			carInfo[i].direction = rand() % 2;
+	}
 	prevPos[speed - 1] = p.x;
 	p = DEFAULT_CHARACTER_POS;
 	direction = 'D';
 }
 
 void moveCars() {
-	for (int i = 1; i < MAX_CAR; i += 2) {
-		speedUP = 0;
-		do {
-			speedUP++;
-			for (int j = 0; j < MAX_CAR_LENGTH - 1; j++) {
-				carArray[i][j] = carArray[i][j + 1];
-			}
-			carArray[i][MAX_CAR_LENGTH - 1].x + 1 == WIDTH_CONSOLE ? carArray[i][MAX_CAR_LENGTH - 1].x = 1 : carArray[i][MAX_CAR_LENGTH - 1].x++;
-		} while (speedUP < speed);
-	}
-	for (int i = 0; i < MAX_CAR; i += 2) {
-		speedUP = 0;
-		do {
-			speedUP++;
-			for (int j = MAX_CAR_LENGTH - 1; j > 0; j--) {
-				carArray[i][j] = carArray[i][j - 1];
-			}
-			carArray[i][0].x - 1 == 0 ? carArray[i][0].x = WIDTH_CONSOLE - 1 : carArray[i][0].x--;
-		} while (speedUP < speed);
+	for (int i = 0; i < MAX_CAR; i++) {
+		if (carInfo[i].direction == 1) {
+			speedUP = 0;
+			do {
+				speedUP++;
+				for (int j = 0; j < carInfo[i].length - 1; j++) {
+					carArray[i][j] = carArray[i][j + 1];
+				}
+				carArray[i][carInfo[i].length - 1] + 1 == WIDTH_CONSOLE ? carArray[i][carInfo[i].length - 1] = 1 : carArray[i][carInfo[i].length - 1]++;
+			} while (speedUP < speed);
+		}
+		if (carInfo[i].direction == 0) {
+			speedUP = 0;
+			do {
+				speedUP++;
+				for (int j = carInfo[i].length - 1; j > 0; j--) {
+					carArray[i][j] = carArray[i][j - 1];
+				}
+				carArray[i][0] - 1 == 0 ? carArray[i][0] = WIDTH_CONSOLE - 1 : carArray[i][0]--;
+			} while (speedUP < speed);
+		}
 	}
 }
 
 void eraseCars() {
-	for (int i = 0; i < MAX_CAR; i += 2) {
-		speedUP = 0;
-		do {
-			GotoXY(carArray[i][MAX_CAR_LENGTH - 1 - speedUP].x, carArray[i][MAX_CAR_LENGTH - 1 - speedUP].y);
-			cout << " ";
-			speedUP++;
-		} while (speedUP < speed);
-	}
-	for (int i = 1; i < MAX_CAR; i += 2) {
-		speedUP = 0;
-		do {
-			GotoXY(carArray[i][0 + speedUP].x, carArray[i][0 + speedUP].y);
-			printf(" ");
-			speedUP++;
-		} while (speedUP < speed);
+	for (int i = 0; i < MAX_CAR; i++) {
+		if (carInfo[i].direction == 0) {
+			speedUP = 0;
+			do {
+				GotoXY(carArray[i][carInfo[i].length - 1 - speedUP], i + 3);
+				cout << " ";
+				speedUP++;
+			} while (speedUP < speed);
+		}
+		if (carInfo[i].direction == 1) {
+			speedUP = 0;
+			do {
+				GotoXY(carArray[i][0 + speedUP], i + 3);
+				printf(" ");
+				speedUP++;
+			} while (speedUP < speed);
+		}
 	}
 }

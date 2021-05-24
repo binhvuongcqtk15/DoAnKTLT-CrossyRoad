@@ -5,22 +5,22 @@ using namespace std;
 
 void moveRight() {
 	step++;
-	if (player_pos.x < WIDTH_CONSOLE - 1) {
-		drawCharacter(player_pos, " ");
-		player_pos.x++;
-		drawCharacter(player_pos, "Y");
-	}
+	drawCharacter(player_pos, " ");
+	if (player_pos.x > WIDTH_CONSOLE - 2)
+		player_pos.x = 0;
+	player_pos.x++;
+	drawCharacter(player_pos, "Y");
 }
 void moveLeft() {
-	if (player_pos.x > 1) {
-		step++;
-		drawCharacter(player_pos, " ");
-		player_pos.x--;
-		drawCharacter(player_pos, "Y");
-	}
+	step++;
+	drawCharacter(player_pos, " ");
+	if (player_pos.x < 2)
+		player_pos.x = WIDTH_CONSOLE;
+	player_pos.x--;
+	drawCharacter(player_pos, "Y");
 }
 void moveDown() {
-	if (player_pos.y < PLAYGROUND_SECTION_HEIGHT - 1) {
+	if (player_pos.y < PLAYGROUND_SECTION_HEIGHT + 1) {
 		step++;
 		drawCharacter(player_pos, " ");
 		player_pos.y++;
@@ -28,7 +28,7 @@ void moveDown() {
 	}
 }
 void moveUp() {
-	if (player_pos.y > 1) {
+	if (player_pos.y > 2) {
 		step++;
 		drawCharacter(player_pos, " ");
 		player_pos.y--;

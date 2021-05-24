@@ -8,18 +8,19 @@ void deleteCarArray() {
 	for (int i = 0; i < MAX_CAR; i++)
 		delete[] carArray[i];
 	delete[] carArray;
+	delete[] carInfo;
 }
 
 bool isFileExist(string fileName) {
-	fstream fileInput(fileName);
+	fstream fileInput(fileName + ".txt");
 	return fileInput.good();
 }
 
 void startGame() {
 	system("cls");
 	resetData();
-	drawBoard(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
-	drawBoard(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
+	drawPlayGround(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
+	drawPlayGround(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
 	state = true;
 }
 
@@ -36,12 +37,13 @@ void pauseGame(HANDLE t) {
 
 void saveGame(string player_name, POINT player_pos) {
 	string fileName = player_name + ".txt";
-	ofstream fileOutput(fileName);
+	fstream fileOutput;
+	fileOutput.open(fileName, ios::out | ios::trunc); // erase exist data
 	fileOutput << speed << "\n" << step << "\n";
 	for (int i = 0; i < MAX_CAR; i++) {
-		for (int j = 0; j < MAX_CAR_LENGTH; j++)
-			fileOutput << carArray[i][j].x << "\n";
-		cout << "\n";
+		fileOutput << carInfo[i].length << "\n" << carInfo[i].direction << "\n";
+		for (int j = 0; j < carInfo[i].length; j++)
+			fileOutput << carArray[i][j] << "\n";
 	}
 	if (speed != 1)
 		fileOutput << prevPos[speed - 1] << "\n";
@@ -50,14 +52,16 @@ void saveGame(string player_name, POINT player_pos) {
 }
 void loadGame(string player_name, POINT &player_pos) {
 	system("cls");
-	drawBoard(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
-	drawBoard(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
+	drawPlayGround(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
+	drawPlayGround(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
 	string fileName = player_name + ".txt";
-	ifstream fileInput(fileName);
+	fstream fileInput(fileName);
 	fileInput >> speed >> step;
-	for (int i = 0; i < MAX_CAR; i++)
-		for (int j = 0; j < MAX_CAR_LENGTH; j++)
-			fileInput >> carArray[i][j].x;
+	for (int i = 0; i < MAX_CAR; i++) {
+		fileInput >> carInfo[i].length >> carInfo[i].direction;
+		for (int j = 0; j < carInfo[i].length; j++)
+			fileInput >> carArray[i][j];
+	}
 	if (speed != 1) {
 		fileInput >> prevPos[speed - 1];
 		GotoXY(prevPos[speed - 1], 2);
@@ -65,6 +69,7 @@ void loadGame(string player_name, POINT &player_pos) {
 	}
 	fileInput >> player_pos.x >> player_pos.y;
 	fileInput.close();
+	//system("pause");
 	drawCars("=");
 	drawCharacter(player_pos, "Y");
 	drawInfo();
