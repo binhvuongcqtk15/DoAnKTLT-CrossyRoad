@@ -10,32 +10,13 @@ void FixConsoleWindow() {
 	SetWindowLong(consoleWindow, GWL_STYLE, style);
 }
 
-
-void startMenu() {
-	GotoXY(13, 5); cout << "OOOOOO   OOOOOO   OOOOOOO   OOOOOO   OOOOOO   OO  OO       OOOOOO   OOOOOOO   OOOOOOO   OOOOO";
-	GotoXY(13, 6); cout << "OO       OO  OO   OO   OO   OO       OO       OO  OO       OO  OO   OO   OO   OO   OO   OO  OO";
-	GotoXY(13, 7); cout << "OO       OO OO    OO   OO   OOOOOO   OOOOOO     OO    ===  OO OO    OO   OO   OOOOOOO   OO   OO";
-	GotoXY(13, 8); cout << "OO       OO  OO   OO   OO       OO       OO     OO         OO  OO   OO   OO   OO   OO   OO  OO";
-	GotoXY(13, 9); cout << "OOOOOO   OO   OO  OOOOOOO   OOOOOO   OOOOOO     OO         OO   OO  OOOOOOO   OO   OO   OOOOO";
-
-	for (int i = 0; i <= 3; ++i)
-		drawSelectBox(51, 12 + 3 * i, 16, 2);
-
-	GotoXY(52, 13); cout << "New Game";
-	GotoXY(65, 13); cout << "N";
-	GotoXY(52, 16); cout << "Load Game";
-	GotoXY(65, 16); cout << "L";
-	GotoXY(52, 19); cout << "Exit";
-	GotoXY(64, 19); cout << "Esc";
-	GotoXY(52, 22); cout << "About";
-	GotoXY(65, 22); cout << "O";
-	GotoXY(0, 0);
-
-
-}
-
+// run sub thread side-by-side main thread
 void subThread() {
-	while (1) {
+
+	// make game stop for a while, depend on current level
+	bool delay = false;
+	int time2stop = speed * 3 + 1;
+	while (!pausing) {
 		if (state) {
 			switch (direction) {
 			case 'A': moveLeft(); break;
@@ -44,22 +25,37 @@ void subThread() {
 			case 'S': moveDown(); break;
 			}
 			direction = ' ';
+			//check player lose or not
 			if (isImpact(player_pos)) {
 				processDead();
 				continue;
 			}
+			
+			// start clock to delay
+			delay == true ? time2stop++ : time2stop--;
+			if (time2stop == 0 || time2stop == speed * 3 + 1)
+				delay = !delay;
+			if (delay)
+				continue;
+
 			eraseCars();
 			moveCars();
 			drawCars("=");
 			drawInfo();
-			drawPlayGround(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
-			drawPlayGround(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
+			drawBox(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
+			drawBox(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
+			
+			//check if player pass the level
 			if (player_pos.y == 2) {
 				if (player_pos.x == prevPos[0] || player_pos.x == prevPos[1]) 
 					processDead();
-				else
+				else {
 					processPass(player_pos);
+					time2stop = speed * 3 + 1;
+				}
 			}
 		}
+		// sleep with time that clock has already calculated
+		Sleep(time2stop);
 	}
 }

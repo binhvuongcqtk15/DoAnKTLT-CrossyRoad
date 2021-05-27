@@ -4,37 +4,50 @@
 #include "gameControl.h"
 using namespace std;
 
-void deleteCarArray() {
+// erase memory in hard drive
+void deleteCar() {
 	for (int i = 0; i < MAX_CAR; i++)
 		delete[] carArray[i];
 	delete[] carArray;
 	delete[] carInfo;
 }
 
+// check if file exist or not
 bool isFileExist(string fileName) {
 	fstream fileInput(fileName + ".txt");
 	return fileInput.good();
 }
 
+// start a new Game
 void startGame() {
 	system("cls");
 	resetData();
-	drawPlayGround(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
-	drawPlayGround(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
+	drawBox(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
+	drawBox(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
 	state = true;
 }
 
+// kill thread then clear memory and exit
 void exitGame(HANDLE t) {
 	system("cls"); 
 	TerminateThread(t, 0);
-	deleteCarArray();
+	deleteCar();
 	exit(1);
 }
 
+// pause thread -> pause game
 void pauseGame(HANDLE t) {
 	SuspendThread(t);
+	pausing = true; // change value to show that game is pausing
 }
 
+// resume thrad -> game continue
+void resumeGame(HANDLE t) {
+	pausing = false; // change value to show that game is running (not pausing)
+	ResumeThread(t); 
+}
+
+// save game to player_name.txt file, if file already exist, clear it first
 void saveGame(string player_name, POINT player_pos) {
 	string fileName = player_name + ".txt";
 	fstream fileOutput;
@@ -50,10 +63,12 @@ void saveGame(string player_name, POINT player_pos) {
 	fileOutput << player_pos.x << "\n" << player_pos.y;
 	fileOutput.close();
 }
+
+// load game from player_name.txt file
 void loadGame(string player_name, POINT &player_pos) {
 	system("cls");
-	drawPlayGround(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
-	drawPlayGround(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
+	drawBox(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
+	drawBox(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
 	string fileName = player_name + ".txt";
 	fstream fileInput(fileName);
 	fileInput >> speed >> step;
@@ -69,7 +84,6 @@ void loadGame(string player_name, POINT &player_pos) {
 	}
 	fileInput >> player_pos.x >> player_pos.y;
 	fileInput.close();
-	//system("pause");
 	drawCars("=");
 	drawCharacter(player_pos, "Y");
 	drawInfo();

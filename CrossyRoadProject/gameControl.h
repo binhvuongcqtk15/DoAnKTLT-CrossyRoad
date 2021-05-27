@@ -2,6 +2,7 @@
 #include "varsANDlibs.h"
 using namespace std;
 
+// go to position (x, y) in console, top left corner start (0, 0)
 void GotoXY(int x, int y) {
 	COORD coord;
 	coord.X = x;
@@ -9,6 +10,7 @@ void GotoXY(int x, int y) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
+// reset variable to default
 void resetData() {
 	direction = 'D';
 	speed = 1;
@@ -30,6 +32,7 @@ void resetData() {
 	memset(prevPos, 0, sizeof(prevPos));
 }
 
+// check if player impact with car
 bool isImpact(const POINT& p) {
 	if (player_pos.y == 2 || player_pos.y == 24)
 		return false;
@@ -39,15 +42,17 @@ bool isImpact(const POINT& p) {
 	return false;
 }
 
-void clearBoard(int x, int y, int width, int height) {
+// fill rectangle area start at (x, y) to (x+width, y+height) with string s 
+void fillBox(int x, int y, int width, int height, string s) {
 	for (int i = x; i <= x + width; ++i) {
 		for (int j = y; j <= y + height; ++j) {
 			GotoXY(i, j);
-			cout << " ";
+			cout << s;
 		}
 	}
 }
 
+// draw select box in Menu for user to choose action at (x, y)
 void drawSelectBox(int x, int y, int width, int height) {
 	for (int i = x; i < x + width; ++i) {
 		GotoXY(i, y);
@@ -72,7 +77,8 @@ void drawSelectBox(int x, int y, int width, int height) {
 	GotoXY(x + width, y + height); cout << char(217);
 }
 
-void drawPlayGround(int x, int y, int width, int height) {
+// draw a box start at (x, y) 
+void drawBox(int x, int y, int width, int height) {
 	GotoXY(x, y);
 	if (y == 0) {
 		cout << char(218);
@@ -103,6 +109,7 @@ void drawPlayGround(int x, int y, int width, int height) {
 	GotoXY(0, 0);
 }
 
+// draw car in console
 void drawCars(string s) {
 	for (int i = 0; i < MAX_CAR; i++) {
 		for (int j = 0; j < carInfo[i].length; j++) {
@@ -111,11 +118,14 @@ void drawCars(string s) {
 		}
 	}
 }
+
+// draw character s at position p a.k.a (p.x, p.y)
 void drawCharacter(const POINT& p, string s) {
 	GotoXY(p.x, p.y);
 	cout << s;
 }
 
+// draw infomation about user in console (sub thread)
 void drawInfo() {
 	GotoXY(5, HEIGHT_CONSOLE - 2); cout << "Player Name: " << player_name;
 	GotoXY(5, HEIGHT_CONSOLE - 1); cout << "Level: " << speed;
@@ -131,6 +141,7 @@ void drawInfo() {
 	}
 
 	GotoXY(51, HEIGHT_CONSOLE - 1); cout << " Move   " << char(16) << "   W,A,S,D ";
+	
 	GotoXY(75, HEIGHT_CONSOLE - 2); cout << " Pause Game    " << char(16) << "   P";
 	GotoXY(75, HEIGHT_CONSOLE - 1); cout << " Save Game     " << char(16) << "   K";
 	GotoXY(75, HEIGHT_CONSOLE - 0); cout << " Restart Game  " << char(16) << "   R";
@@ -138,8 +149,31 @@ void drawInfo() {
 	GotoXY(99, HEIGHT_CONSOLE - 1); cout << " Exit   " << char(16) << "   Esc ";
 }
 
+// draw start menu in console (main thread)
+void startMenu() {
+	GotoXY(13, 5); cout << "OOOOOO   OOOOOO   OOOOOOO   OOOOOO   OOOOOO   OO  OO       OOOOOO   OOOOOOO   OOOOOOO   OOOOO";
+	GotoXY(13, 6); cout << "OO       OO  OO   OO   OO   OO       OO       OO  OO       OO  OO   OO   OO   OO   OO   OO  OO";
+	GotoXY(13, 7); cout << "OO       OO OO    OO   OO   OOOOOO   OOOOOO     OO    ===  OO OO    OO   OO   OOOOOOO   OO   OO";
+	GotoXY(13, 8); cout << "OO       OO  OO   OO   OO       OO       OO     OO         OO  OO   OO   OO   OO   OO   OO  OO";
+	GotoXY(13, 9); cout << "OOOOOO   OO   OO  OOOOOOO   OOOOOO   OOOOOO     OO         OO   OO  OOOOOOO   OO   OO   OOOOO";
+
+	for (int i = 0; i <= 3; ++i)
+		drawSelectBox(51, 12 + 3 * i, 16, 2);
+
+	GotoXY(52, 13); cout << "New Game";
+	GotoXY(65, 13); cout << "N";
+	GotoXY(52, 16); cout << "Load Game";
+	GotoXY(65, 16); cout << "L";
+	GotoXY(52, 19); cout << "Exit";
+	GotoXY(64, 19); cout << "Esc";
+	GotoXY(52, 22); cout << "About";
+	GotoXY(65, 22); cout << "O";
+	GotoXY(0, 0);
+}
+
+// decide what to do when player lose
 void processDead() {
-	clearBoard(1, PLAYGROUND_SECTION_HEIGHT + 2, WIDTH_CONSOLE - 2, INFO_SECTION_HEIGHT - 2);
+	fillBox(1, PLAYGROUND_SECTION_HEIGHT + 2, WIDTH_CONSOLE - 2, INFO_SECTION_HEIGHT - 2, " ");
 	state = 0;
 	GotoXY(46, PLAYGROUND_SECTION_HEIGHT + 2);
 	cout << "You're hit by a Car (T.T)";
@@ -147,6 +181,7 @@ void processDead() {
 	cout << "Press R to restart or any keys to exit";
 }
 
+// decide what to do when player win a level
 void processPass(POINT& p) {
 	prevPos[speed - 1] = p.x;
 	if (speed == MAX_SPEED) {
@@ -156,12 +191,14 @@ void processPass(POINT& p) {
 		speed++;
 		for (int i = 0; i < MAX_CAR; ++i)
 			carInfo[i].direction = rand() % 2;
+
 	}
 	prevPos[speed - 1] = p.x;
 	p = DEFAULT_CHARACTER_POS;
 	direction = 'D';
 }
 
+// make car move around
 void moveCars() {
 	for (int i = 0; i < MAX_CAR; i++) {
 		if (carInfo[i].direction == 1) {
@@ -187,6 +224,7 @@ void moveCars() {
 	}
 }
 
+// erase car, also use to change car position
 void eraseCars() {
 	for (int i = 0; i < MAX_CAR; i++) {
 		if (carInfo[i].direction == 0) {

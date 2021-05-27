@@ -11,8 +11,9 @@ int main() {
 	srand(time(NULL));
 	thread t1(subThread);
 	startMenu();
+
 	while (1) {
-		temp = toupper(_getch());
+		temp = toupper(_getch()); // wait for input from user, make it capitalize
 		if (temp == 'L') {
 			resetData();
 			pauseGame(t1.native_handle());
@@ -20,6 +21,7 @@ int main() {
 			printf("Type name: ");
 			while(1) {
 				getline(cin, player_name);
+				// check if file exist or not, if not, ask again
 				if (!isFileExist(player_name))
 					cout << "Can't find " << player_name << "'s data. Please re-enter: ";
 				else
@@ -52,27 +54,51 @@ int main() {
 				exit(0);
 			}
 			else if (temp == 'P') {
-			 	pauseGame(t1.native_handle());
+				// if game is pausing, resume it
+				//	or if game is running, pause it
+			 	if(pausing == false)
+					pauseGame(t1.native_handle());
+				else
+					resumeGame(t1.native_handle());
 			}
 			else if (temp == 'K') {
-				pauseGame(t1.native_handle());
-				//debug(25, 40);
+				/*
+					Do not use SuspendThread, or pauseGame at this place.
+					Because if we do that, thread t1 will stop, and it don't allow
+				us to enter player name.
+					Solution: use variable "pausing = true" to make sure computer understand
+				that game is pausing (theoretically), so it will stop print new car and player position
+				in thread without SuspendThread, then we could enter player name.
+					Disadvandtage: since we use variable to stop print new car position, some magic way,
+				it keep print some mesh, so we have to clear console with " ". It partially affects the aesthetic
+				*/
+				pausing = !pausing;
+				fillBox(0, 0, WIDTH_CONSOLE, HEIGHT_CONSOLE + 1, "*");
+				fillBox(0, 0, WIDTH_CONSOLE, HEIGHT_CONSOLE + 1, " ");
 				if (player_name == DEFAULT_PLAYER_NAME) {
-					clearBoard(1, PLAYGROUND_SECTION_HEIGHT + 2, WIDTH_CONSOLE - 2, INFO_SECTION_HEIGHT - 2);
-					GotoXY(50, PLAYGROUND_SECTION_HEIGHT + 3);
+					GotoXY(50, 14);
 					cout << "Type name: ";
 					getline(cin, player_name);
+				}
+				else {
+
 				}
 				saveGame(player_name, player_pos);
 				exitGame(t1.native_handle());
 			}
+			else if (temp == 'R') {
+				startGame();
+			}
 			else {
-				ResumeThread((HANDLE)t1.native_handle());
+				if (pausing == true)
+					resumeGame(t1.native_handle());
 				if (temp == 'D' || temp == 'A' || temp == 'W' || temp == 'S')
 					direction = temp;
 			}
+
 		}
 		else {
+			// when player lose
 			if (temp == 'R') {
 				startGame();
 			}
