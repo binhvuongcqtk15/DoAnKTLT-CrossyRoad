@@ -44,7 +44,7 @@ bool isImpact(const POINT& p) {
 
 // fill rectangle area start at (x, y) to (x+width, y+height) with string s 
 void fillBox(int x, int y, int width, int height, string s) {
-	for (int i = x; i <= x + width; ++i) {
+	for (int i = x; i <= x + width; i += int(s.length())) {
 		for (int j = y; j <= y + height; ++j) {
 			GotoXY(i, j);
 			cout << s;
@@ -127,11 +127,11 @@ void drawCharacter(const POINT& p, string s) {
 
 // draw infomation about user in console (sub thread)
 void drawInfo() {
-	GotoXY(5, HEIGHT_CONSOLE - 2); cout << "Player Name: " << player_name;
-	GotoXY(5, HEIGHT_CONSOLE - 1); cout << "Level: " << speed;
-	GotoXY(5, HEIGHT_CONSOLE - 0); cout << "Number of steps: " << step;
+	GotoXY(5, HEIGHT_CONSOLE - 4); cout << "Player Name: " << player_name;
+	GotoXY(5, HEIGHT_CONSOLE - 3); cout << "Level: " << speed;
+	GotoXY(5, HEIGHT_CONSOLE - 2); cout << "Number of steps: " << step;
 
-	for (int i = 0; i < INFO_SECTION_HEIGHT - 1; ++i) {
+	for (int i = 2; i < INFO_SECTION_HEIGHT + 1; ++i) {
 		GotoXY(50, HEIGHT_CONSOLE - i);
 		cout << char(179);
 		GotoXY(74, HEIGHT_CONSOLE - i);
@@ -140,13 +140,61 @@ void drawInfo() {
 		cout << char(179);
 	}
 
-	GotoXY(51, HEIGHT_CONSOLE - 1); cout << " Move   " << char(16) << "   W,A,S,D ";
+	GotoXY(51, HEIGHT_CONSOLE - 3); cout << " Move   " << char(16) << "   W,A,S,D ";
 	
-	GotoXY(75, HEIGHT_CONSOLE - 2); cout << " Pause Game    " << char(16) << "   P";
-	GotoXY(75, HEIGHT_CONSOLE - 1); cout << " Save Game     " << char(16) << "   K";
-	GotoXY(75, HEIGHT_CONSOLE - 0); cout << " Restart Game  " << char(16) << "   R";
+	GotoXY(75, HEIGHT_CONSOLE - 4); cout << " Pause Game    " << char(16) << "   P";
+	GotoXY(75, HEIGHT_CONSOLE - 3); cout << " Save Game     " << char(16) << "   K";
+	GotoXY(75, HEIGHT_CONSOLE - 2); cout << " Restart Game  " << char(16) << "   R";
 
-	GotoXY(99, HEIGHT_CONSOLE - 1); cout << " Exit   " << char(16) << "   Esc ";
+	GotoXY(99, HEIGHT_CONSOLE - 3); cout << " Exit   " << char(16) << "   Esc ";
+}
+
+//draw effect when player hit the car
+void endGameMenu() {
+	
+	GotoXY(45, 2);  cout << "_";
+	GotoXY(42, 3);  cout << "_ooOoo_";
+	GotoXY(41, 4);  cout << "o8888888o";
+	GotoXY(41, 5);  cout << "88\" . \"88";
+	GotoXY(41, 6);  cout << "(| -_- |)";
+	GotoXY(41, 7);  cout << "O\\  =  /O";
+	GotoXY(39, 8);  cout << "____/`---'\\____";
+	GotoXY(36, 9);  cout << ".'  \\\\|     |//  `.";
+	GotoXY(35, 10);  cout << "/  \\\\|||  :  |||//  \\";
+	GotoXY(34, 11); cout << "/  _||||| -:- |||||_  \\";
+	GotoXY(34, 12); cout << "|   | \\\\\\  -  /'| |   |";
+	GotoXY(34, 13); cout << "| \\_|  `\\`---'//  |_/ |";
+	GotoXY(34, 14); cout << "\\  .-\\__ `-. -'__/-.  /";
+	GotoXY(32, 15); cout << "___`. .'  /--.--\\  `. .'___";
+	GotoXY(29, 16); cout << ".\"\" '<  `.___\\_<|>_/___.' _> \\\"\".";
+	GotoXY(28, 17); cout << "| | :  `- \\`. ;`. _/; .'/ /  .' ; |";
+	GotoXY(28, 18); cout << "\\  \\ `-.   \\_\\_`. _.'_/_/  -' _.' /";
+	GotoXY(13, 19); cout << "================`-.`___`-.__\\ \\___  /__.-'_.'_.-'================";
+	GotoXY(42, 20); cout << "`=--=-'";
+
+	GotoXY(9, 21); cout << " ___   __  ________   _______   _       _   _______    ___   __   _______";
+	GotoXY(9, 22); cout << "|| \\\\  ||     ||     ||_____))  \\\\     //  ||_____||  || \\\\  ||  ||_____||";
+	GotoXY(9, 23); cout << "||  \\\\_||  ___||___  ||     \\\\   \\\\___//   ||     ||  ||  \\\\_||  ||     ||";
+	
+	ghost_pos.y = HEIGHT_CONSOLE - 3;
+	for(int i = 0; i < 5; ++i) {
+		fillBox(1, ghost_pos.y + 1, WIDTH_CONSOLE - 2, 0, " ");
+		for (int j = i; j >= 0; j--) {
+			GotoXY(WIDTH_CONSOLE - i - ghost_width - 10, ghost_pos.y - j);
+			cout << ghost_shape[i - j];
+		}
+		Sleep(150);
+	}
+	GotoXY(60, 4); cout << " You died in a car crash ";
+	GotoXY(60, 5); cout << "because of your carelessness while crossing the street.";
+	Sleep(500);
+	GotoXY(60, 7); cout << " If you want me to revive you back to the path,";
+	GotoXY(60, 8); cout << "press the \"R\" key.";
+	GotoXY(60, 10); cout << " If you like to escape this world and come with me, ";
+	GotoXY(60, 11); cout << "press any key you want.";
+	Sleep(500);
+	GotoXY(WIDTH_CONSOLE - 16, ghost_pos.y - 5); cout << "Your choice? ";
+	state = 0;
 }
 
 // draw start menu in console (main thread)
@@ -173,12 +221,37 @@ void startMenu() {
 
 // decide what to do when player lose
 void processDead() {
-	fillBox(1, PLAYGROUND_SECTION_HEIGHT + 2, WIDTH_CONSOLE - 2, INFO_SECTION_HEIGHT - 2, " ");
-	state = 0;
-	GotoXY(46, PLAYGROUND_SECTION_HEIGHT + 2);
-	cout << "You're hit by a Car (T.T)";
-	GotoXY(38, PLAYGROUND_SECTION_HEIGHT + 3);
-	cout << "Press R to restart or any keys to exit";
+	ghost_pos.y = max(player_pos.y, 8);
+	ghost_pos.x = min(player_pos.x, WIDTH_CONSOLE - 8);
+	for (int i = PLAYGROUND_SECTION_HEIGHT; i > ghost_pos.y; --i) {
+		fillBox(1, i, 4, 0, "X_X");
+		fillBox(4, i, WIDTH_CONSOLE - 7, 0, "   X_X");
+	}
+	while (ghost_pos.y > 5) {
+		fillBox(1, ghost_pos.y + 1, 4, 0, "X_X");
+		fillBox(4, ghost_pos.y + 1, WIDTH_CONSOLE - 7, 0, "   X_X");
+		for (int i = ghost_height - 1; i >= 0; i--) {
+			fillBox(1, ghost_pos.y - i, WIDTH_CONSOLE - 2, 0, " ");
+			GotoXY(ghost_pos.x, ghost_pos.y - i); 
+			cout << ghost_shape[ghost_height - i - 1];
+		}
+		ghost_pos.y--;
+		Sleep(75);
+	}
+	while (ghost_pos.y > 0) {
+		fillBox(1, ghost_pos.y + 1, 4, 0, "X_X");
+		fillBox(4, ghost_pos.y + 1, WIDTH_CONSOLE - 7, 0, "   X_X");
+		for (int i = ghost_pos.y - 2; i >= 0; i--) {
+			fillBox(1, ghost_pos.y - i, WIDTH_CONSOLE - 2, 0, " ");
+			GotoXY(ghost_pos.x, ghost_pos.y - i);
+			cout << ghost_shape[ghost_height - i - 1];
+		}
+		ghost_pos.y--;
+		Sleep(100);
+	}
+	fillBox(1, 1, WIDTH_CONSOLE - 2, HEIGHT_CONSOLE - 4, " ");
+	Sleep(250);
+	endGameMenu();
 }
 
 // decide what to do when player win a level

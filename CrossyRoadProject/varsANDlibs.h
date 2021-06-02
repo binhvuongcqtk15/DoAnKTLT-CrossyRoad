@@ -7,6 +7,7 @@
 #include <thread>
 #include <conio.h>
 #include <string>
+#include <algorithm>
 using namespace std;
 
 const int MAX_CAR = 21; // number of car in console, each car in one line
@@ -16,7 +17,7 @@ const int MAX_SPEED = 3; // max speed of a car, also max level can access
 
 //Console parameter
 const int PLAYGROUND_SECTION_HEIGHT = 24, INFO_SECTION_HEIGHT = 4;
-const int WIDTH_CONSOLE = 118, HEIGHT_CONSOLE = 28;
+const int WIDTH_CONSOLE = 118, HEIGHT_CONSOLE = 30;
 
 const POINT DEFAULT_CHARACTER_POS = { 58,24 }; // default player position
 const string DEFAULT_PLAYER_NAME = "Anonymous"; // default player name
@@ -42,6 +43,10 @@ bool pausing = false; // true: game is pausing, false: game is running
 int prevPos[5]; // player position in previous level
 string player_name; // player name
 
+//End game effect
+POINT ghost_pos;
+int ghost_height = 5, ghost_width = 7;
+string ghost_shape[5] = { " .-.   " , "(o o)  " , "| O \\  ", " \\   \\ " , "  `~~~'" };
 /*
 	console be like: 
 	(0, 0)--------------------> x

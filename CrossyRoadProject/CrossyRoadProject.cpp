@@ -8,7 +8,7 @@ using namespace std;
 int main() {
 	int temp;
 	FixConsoleWindow();
-	srand(time(NULL));
+	srand((unsigned)time(NULL));
 	thread t1(subThread);
 	startMenu();
 
@@ -18,12 +18,15 @@ int main() {
 			resetData();
 			pauseGame(t1.native_handle());
 			GotoXY(0, PLAYGROUND_SECTION_HEIGHT + 2);
-			printf("Type name: ");
+			printf("Enter your name to continue playing: ");
 			while(1) {
 				getline(cin, player_name);
 				// check if file exist or not, if not, ask again
-				if (!isFileExist(player_name))
+				if (!isFileExist(player_name)) {
+					fillBox(0, PLAYGROUND_SECTION_HEIGHT + 2, WIDTH_CONSOLE, 0, " ");
+					GotoXY(0, PLAYGROUND_SECTION_HEIGHT + 2);
 					cout << "Can't find " << player_name << "'s data. Please re-enter: ";
+				}
 				else
 					break;
 			}
@@ -35,14 +38,16 @@ int main() {
 			startGame();
 			break;
 		}
-		else if (temp == 27)
-			exit(1);
+		else if (temp == 27) {
+			exitGame(t1.native_handle());
+			return 0;
+		}
 		else if (temp == 'O') {
 			system("cls");
 		}
 		else {
 			GotoXY(5, 25);
-			cout << "It's not an option. Please Re-enter: ";
+			cout << "It's not an option. Please choose again.";
 		}
 	}
 
@@ -51,7 +56,7 @@ int main() {
 		if (state) {
 			if (temp == 27) {
 				exitGame(t1.native_handle());
-				exit(0);
+				return 0;
 			}
 			else if (temp == 'P') {
 				// if game is pausing, resume it
@@ -77,7 +82,7 @@ int main() {
 				fillBox(0, 0, WIDTH_CONSOLE, HEIGHT_CONSOLE + 1, " ");
 				if (player_name == DEFAULT_PLAYER_NAME) {
 					GotoXY(50, 14);
-					cout << "Type name: ";
+					cout << "Enter your name : ";
 					getline(cin, player_name);
 				}
 				else {
@@ -85,9 +90,6 @@ int main() {
 				}
 				saveGame(player_name, player_pos);
 				exitGame(t1.native_handle());
-			}
-			else if (temp == 'R') {
-				startGame();
 			}
 			else {
 				if (pausing == true)

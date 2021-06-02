@@ -12,7 +12,6 @@ void FixConsoleWindow() {
 
 // run sub thread side-by-side main thread
 void subThread() {
-
 	// make game stop for a while, depend on current level
 	bool delay = false;
 	int time2stop = speed * 3 + 1;
@@ -35,16 +34,14 @@ void subThread() {
 			delay == true ? time2stop++ : time2stop--;
 			if (time2stop == 0 || time2stop == speed * 3 + 1)
 				delay = !delay;
-			if (delay)
-				continue;
-
-			eraseCars();
-			moveCars();
-			drawCars("=");
-			drawInfo();
-			drawBox(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
-			drawBox(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
-			
+			if (!delay) {
+				eraseCars();
+				moveCars();
+				drawCars("=");
+				drawInfo();
+				drawBox(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
+				drawBox(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
+			}
 			//check if player pass the level
 			if (player_pos.y == 2) {
 				if (player_pos.x == prevPos[0] || player_pos.x == prevPos[1]) 
