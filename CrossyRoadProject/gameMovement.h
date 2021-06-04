@@ -20,7 +20,7 @@ void moveLeft() {
 	drawCharacter(player_pos, "Y");
 }
 void moveDown() {
-	if (player_pos.y < PLAYGROUND_SECTION_HEIGHT + 1) {
+	if (player_pos.y < PLAYGROUND_SECTION_HEIGHT) {
 		step++;
 		drawCharacter(player_pos, " ");
 		player_pos.y++;
