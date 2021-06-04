@@ -77,6 +77,23 @@ void drawSelectBox(int x, int y, int width, int height) {
 	GotoXY(x + width, y + height); cout << char(217);
 }
 
+//draw about
+void drawAbout() {
+	GotoXY(48, 7); cout << "DO AN KY THUAT LAP TRINH: GAME BANG QUA DUONG";
+	GotoXY(60, 9); cout << "Giao vien huong dan: TRUONG TOAN THINH";
+
+	cout << "Thuc hien boi: Nhom 15 - 20CTT1 - FIT - HCMUS";
+	cout << "Vuong Le Duc Binh \t\t";
+	cout << "Nguyen Minh An\t\t";
+	cout << "Vo Hoai An\t\t\t";
+	cout << "Tran Hoang Phuong Nam\t";
+
+	cout << "Source Code: https://tinyurl.com/Team15KTLT";
+
+	cout << "Just use W, A, S, D to move and you'll figure it out how to play. Have fun!!!";
+
+}
+
 // draw a box start at (x, y) 
 void drawBox(int x, int y, int width, int height) {
 	GotoXY(x, y);
@@ -107,22 +124,6 @@ void drawBox(int x, int y, int width, int height) {
 		cout << char(179);
 	}
 	GotoXY(0, 0);
-}
-
-// draw car in console
-void drawCars(string s) {
-	for (int i = 0; i < MAX_CAR; i++) {
-		for (int j = 0; j < carInfo[i].length; j++) {
-			GotoXY(carArray[i][j], i + 3);
-			cout << s;
-		}
-	}
-}
-
-// draw character s at position p a.k.a (p.x, p.y)
-void drawCharacter(const POINT& p, string s) {
-	GotoXY(p.x, p.y);
-	cout << s;
 }
 
 // draw infomation about user in console (sub thread)
@@ -269,6 +270,22 @@ void processPass(POINT& p) {
 	prevPos[speed - 1] = p.x;
 	p = DEFAULT_CHARACTER_POS;
 	direction = 'D';
+}
+
+// draw character s at position p a.k.a (p.x, p.y)
+void drawCharacter(const POINT& p, string s) {
+	GotoXY(p.x, p.y);
+	cout << s;
+}
+
+// draw car in console
+void drawCars(string s) {
+	for (int i = 0; i < MAX_CAR; i++) {
+		for (int j = 0; j < carInfo[i].length; j++) {
+			GotoXY(carArray[i][j], i + 3);
+			cout << s;
+		}
+	}
 }
 
 // make car move around
