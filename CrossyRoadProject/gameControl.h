@@ -2,36 +2,6 @@
 #include "varsANDlibs.h"
 using namespace std;
 
-// go to position (x, y) in console, top left corner start (0, 0)
-void GotoXY(int x, int y) {
-	COORD coord;
-	coord.X = x;
-	coord.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-}
-
-// reset variable to default
-void resetData() {
-	direction = 'D';
-	speed = 1;
-	step = 0;
-	player_name = DEFAULT_PLAYER_NAME;
-	player_pos = DEFAULT_CHARACTER_POS;
-	if (carArray == NULL)
-		carArray = new int* [MAX_CAR];
-	if (carInfo == NULL)
-		carInfo = new CAR[MAX_CAR];
-	for (int i = 0; i < MAX_CAR; i++) {
-		carInfo[i].direction = rand() % 2;
-		carInfo[i].length = MIN_CAR_LENGTH + rand() % (MAX_CAR_LENGTH - MIN_CAR_LENGTH + 1);
-		carArray[i] = new int[carInfo[i].length];
-		int temp = (rand() % (WIDTH_CONSOLE - carInfo[i].length)) + 1;
-		for (int j = 0; j < carInfo[i].length; j++)
-			carArray[i][j] = temp + j; 
-	}
-	memset(prevPos, 0, sizeof(prevPos));
-}
-
 // check if player impact with car
 bool isImpact(const POINT& p) {
 	if (player_pos.y == 2 || player_pos.y == 24)
