@@ -49,18 +49,18 @@ void drawSelectBox(int x, int y, int width, int height) {
 
 //draw about
 void drawAbout() {
-	GotoXY(48, 7); cout << "DO AN KY THUAT LAP TRINH: GAME BANG QUA DUONG";
-	GotoXY(60, 9); cout << "Giao vien huong dan: TRUONG TOAN THINH";
+	GotoXY(40, 7); cout << "DO AN KY THUAT LAP TRINH: GAME BANG QUA DUONG";
+	GotoXY(65, 9); cout << "Giao vien huong dan: TRUONG TOAN THINH";
 
-	cout << "Thuc hien boi: Nhom 15 - 20CTT1 - FIT - HCMUS";
-	cout << "Vuong Le Duc Binh \t\t";
-	cout << "Nguyen Minh An\t\t";
-	cout << "Vo Hoai An\t\t\t";
-	cout << "Tran Hoang Phuong Nam\t";
+	GotoXY(25, 11); cout << "Thuc hien boi: Nhom 15 - 20CTT1 - FIT - HCMUS";
+	GotoXY(40, 12); cout << "+ Vuong Le Duc Binh \t\t20120043";
+	GotoXY(40, 13); cout << "+ Nguyen Minh An\t\t20120029";
+	GotoXY(40, 14); cout << "+ Vo Hoai An\t\t\t20120033";
+	GotoXY(40, 15); cout << "+ Tran Hoang Phuong Nam\t\t20120146";
 
-	cout << "Source Code: https://tinyurl.com/Team15KTLT";
+	GotoXY(20, 17); cout << "Source Code: https://tinyurl.com/Team15KTLT";
 
-	cout << "Just use W, A, S, D to move and you'll figure it out how to play. Have fun!!!";
+	GotoXY(20, 19); cout << "Just use W, A, S, D to move and you'll figure it out how to play. Have fun!!!";
 
 }
 
@@ -98,9 +98,10 @@ void drawBox(int x, int y, int width, int height) {
 
 // draw infomation about user in console (sub thread)
 void drawInfo() {
+	fillBox(1, HEIGHT_CONSOLE - 2, 50, 0, " ");
 	GotoXY(5, HEIGHT_CONSOLE - 4); cout << "Player Name: " << player_name;
 	GotoXY(5, HEIGHT_CONSOLE - 3); cout << "Level: " << speed;
-	GotoXY(5, HEIGHT_CONSOLE - 2); cout << "Number of steps: " << step;
+	GotoXY(5, HEIGHT_CONSOLE - 2); cout << "Score: " << 150 * speed - step;
 
 	for (int i = 2; i < INFO_SECTION_HEIGHT + 1; ++i) {
 		GotoXY(50, HEIGHT_CONSOLE - i);
@@ -251,9 +252,20 @@ void drawCharacter(const POINT& p, string s) {
 // draw car in console
 void drawCars(string s) {
 	for (int i = 0; i < MAX_CAR; i++) {
+		string curCar(carInfo[i].length, char(247));
+		curCar[1] = char(111);
+		curCar[carInfo[i].length - 2] = char(111);
+		if (carInfo[i].direction == 1) {
+			curCar[0] = '`';
+			curCar[carInfo[i].length - 1] = '>';
+		}
+		else {
+			curCar[0] = '<';
+			curCar[carInfo[i].length - 1] = '\'';
+		}
 		for (int j = 0; j < carInfo[i].length; j++) {
 			GotoXY(carArray[i][j], i + 3);
-			cout << s;
+			cout << curCar[j];
 		}
 	}
 }

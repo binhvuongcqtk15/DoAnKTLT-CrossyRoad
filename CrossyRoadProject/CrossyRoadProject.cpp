@@ -6,6 +6,9 @@
 using namespace std;
 
 int main() {
+	drawAbout();
+	Sleep(5000);
+	return 0;
 	int temp;
 	FixConsoleWindow();
 	srand((unsigned)time(NULL));
@@ -44,6 +47,10 @@ int main() {
 		}
 		else if (temp == 'O') {
 			system("cls");
+			drawAbout();
+			_getch();
+			system("cls");
+			startMenu();
 		}
 		else {
 			GotoXY(5, 25);
