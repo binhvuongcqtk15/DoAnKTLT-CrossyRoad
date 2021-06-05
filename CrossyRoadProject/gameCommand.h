@@ -24,7 +24,7 @@ void startGame() {
 	resetData();
 	drawBox(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
 	drawBox(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
-	state = true;
+	state = 1;
 }
 
 // kill thread then clear memory and exit
@@ -38,12 +38,10 @@ void exitGame(HANDLE t) {
 // pause thread -> pause game
 void pauseGame(HANDLE t) {
 	SuspendThread(t);
-	pausing = true; // change value to show that game is pausing
 }
 
 // resume thrad -> game continue
 void resumeGame(HANDLE t) {
-	pausing = false; // change value to show that game is running (not pausing)
 	ResumeThread(t); 
 }
 

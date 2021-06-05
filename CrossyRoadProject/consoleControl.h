@@ -15,7 +15,7 @@ void subThread() {
 	// make game stop for a while, depend on current level
 	bool delay = false;
 	int time2stop = speed * 3 + 1;
-	while (!pausing) {
+	while (1) {
 		if (state) {
 			switch (direction) {
 			case 'A': moveLeft(); break;
@@ -29,7 +29,8 @@ void subThread() {
 				processDead();
 				continue;
 			}
-			
+			GotoXY(40, 27);
+			cout << delay << " " << time2stop << "\n";
 			// start clock to delay
 			delay == true ? time2stop++ : time2stop--;
 			if (time2stop == 0 || time2stop == speed * 3 + 1)
@@ -49,6 +50,7 @@ void subThread() {
 				else {
 					processPass(player_pos);
 					time2stop = speed * 3 + 1;
+					delay = false;
 				}
 			}
 		}

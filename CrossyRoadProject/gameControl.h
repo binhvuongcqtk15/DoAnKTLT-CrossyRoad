@@ -53,10 +53,10 @@ void drawAbout() {
 	GotoXY(65, 9); cout << "Giao vien huong dan: TRUONG TOAN THINH";
 
 	GotoXY(25, 11); cout << "Thuc hien boi: Nhom 15 - 20CTT1 - FIT - HCMUS";
-	GotoXY(40, 12); cout << "+ Vuong Le Duc Binh \t\t20120043";
-	GotoXY(40, 13); cout << "+ Nguyen Minh An\t\t20120029";
-	GotoXY(40, 14); cout << "+ Vo Hoai An\t\t\t20120033";
-	GotoXY(40, 15); cout << "+ Tran Hoang Phuong Nam\t\t20120146";
+	GotoXY(40, 12); cout << "+ Nguyen Minh An\t\t20120029";
+	GotoXY(40, 13); cout << "+ Vo Hoai An\t\t\t20120033";
+	GotoXY(40, 14); cout << "+ Vuong Le Duc Binh \t\t20120043";
+	GotoXY(40, 15); cout << "+ Tran Hoang Phuong Nam\t\t20120141";
 
 	GotoXY(20, 17); cout << "Source Code: https://tinyurl.com/Team15KTLT";
 
