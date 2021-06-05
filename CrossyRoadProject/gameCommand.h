@@ -6,6 +6,8 @@ using namespace std;
 
 // erase memory in hard drive
 void deleteCar() {
+	if (carArray == NULL || carInfo == NULL)
+		return;
 	for (int i = 0; i < MAX_CAR; i++)
 		delete[] carArray[i];
 	delete[] carArray;
@@ -22,6 +24,7 @@ bool isFileExist(string fileName) {
 void startGame() {
 	system("cls");
 	resetData();
+	drawGameMenu();
 	drawBox(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
 	drawBox(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
 	state = 1;

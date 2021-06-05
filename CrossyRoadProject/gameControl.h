@@ -96,8 +96,14 @@ void drawBox(int x, int y, int width, int height) {
 	GotoXY(0, 0);
 }
 
-// draw infomation about user in console (sub thread)
+
 void drawInfo() {
+	GotoXY(12, HEIGHT_CONSOLE - 3); cout << speed;
+	GotoXY(12, HEIGHT_CONSOLE - 2); cout << 150 * speed - step;
+}
+
+// draw infomation about user in console (sub thread)
+void drawGameMenu() {
 	fillBox(1, HEIGHT_CONSOLE - 2, 50, 0, " ");
 	GotoXY(5, HEIGHT_CONSOLE - 4); cout << "Player Name: " << player_name;
 	GotoXY(5, HEIGHT_CONSOLE - 3); cout << "Level: " << speed;
