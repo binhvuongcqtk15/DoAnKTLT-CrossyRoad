@@ -14,7 +14,7 @@ void FixConsoleWindow() {
 void subThread() {
 	// make game stop for a while, depend on current level
 	int delay = 0;
-	int time2stop = speed * 5 + 1;
+	int time2stop = speed * 10 + 1;
 	while (1) {
 		if (state) {
 			switch (direction) {
@@ -34,7 +34,7 @@ void subThread() {
 			delay == 1 ? time2stop++ : time2stop--;
 			if (time2stop == 0)
 				delay = 1;
-			else if (time2stop == speed * 5 + 1)
+			else if (time2stop == speed * 10 + 1)
 				delay = 0;
 			if (delay == 0) {
 				eraseCars();
@@ -52,11 +52,11 @@ void subThread() {
 				else {
 					processPass(player_pos);
 					delay = 0;
-					time2stop = speed * 5 + 1;
+					time2stop = speed * 10 + 1;
 				}
 			}
 			// sleep with time that clock has already calculated
-			Sleep(10);
+			Sleep(time2stop);
 		}
 	}
 }

@@ -61,6 +61,22 @@ string ghost_shape[5] = { " .-.   " , "(o o)  " , "| O \\  ", " \\   \\ " , "  `
 		 y
 */
 
+// erase memory in hard drive
+void deleteCarData() {
+	if (carArray == NULL || carInfo == NULL)
+		return;
+	for (int i = 0; i < MAX_CAR; i++)
+		delete[] carArray[i];
+	delete[] carArray;
+	delete[] carInfo;
+}
+
+// check if file exist or not
+bool isFileExist(string fileName) {
+	fstream fileInput(fileName + ".txt");
+	return fileInput.good();
+}
+
 // go to position (x, y) in console, top left corner start (0, 0)
 void GotoXY(int x, int y) {
 	COORD coord;
@@ -77,15 +93,14 @@ void set_color(int code) {
 
 // reset variable to default
 void resetData() {
+	deleteCarData();
 	direction = 'D';
 	speed = 1;
 	step = 0;
 	player_name = DEFAULT_PLAYER_NAME;
 	player_pos = DEFAULT_CHARACTER_POS;
-	if (carArray == NULL)
-		carArray = new int* [MAX_CAR];
-	if (carInfo == NULL)
-		carInfo = new CAR[MAX_CAR];
+	carArray = new int* [MAX_CAR];
+	carInfo = new CAR[MAX_CAR];
 
 	srand((unsigned)time(NULL));
 	for (int i = 0; i < MAX_CAR; i++) {

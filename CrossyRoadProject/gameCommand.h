@@ -4,22 +4,6 @@
 #include "gameControl.h"
 using namespace std;
 
-// erase memory in hard drive
-void deleteCarData() {
-	if (carArray == NULL || carInfo == NULL)
-		return;
-	for (int i = 0; i < MAX_CAR; i++)
-		delete[] carArray[i];
-	delete[] carArray;
-	delete[] carInfo;
-}
-
-// check if file exist or not
-bool isFileExist(string fileName) {
-	fstream fileInput(fileName + ".txt");
-	return fileInput.good();
-}
-
 // start a new Game
 void startGame() {
 	system("cls");
@@ -59,8 +43,9 @@ void saveGame(string player_name, POINT player_pos) {
 		for (int j = 0; j < carInfo[i].length; j++)
 			fileOutput << carArray[i][j] << "\n";
 	}
-	if (speed != 1)
-		fileOutput << prevPos[speed - 1] << "\n";
+	for (int i = 0; i < speed; ++i) {
+		fileOutput << prevPos[i] << "\n";
+	}
 	fileOutput << player_pos.x << "\n" << player_pos.y;
 	fileOutput.close();
 }
@@ -79,9 +64,9 @@ void loadGame(string player_name, POINT &player_pos) {
 		for (int j = 0; j < carInfo[i].length; j++)
 			fileInput >> carArray[i][j];
 	}
-	if (speed != 1) {
-		fileInput >> prevPos[speed - 1];
-		GotoXY(prevPos[speed - 1], 2);
+	for (int i = 0; i < speed; ++i) {
+		fileInput >> prevPos[i];
+		GotoXY(prevPos[i], 2);
 		cout << "Y";
 	}
 	fileInput >> player_pos.x >> player_pos.y;

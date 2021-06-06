@@ -98,6 +98,8 @@ void drawBox(int x, int y, int width, int height) {
 
 // draw Speed, score, level
 void drawInfo() {
+	GotoXY(12, HEIGHT_CONSOLE - 3); cout << "     ";
+	GotoXY(12, HEIGHT_CONSOLE - 2); cout << "     ";
 	GotoXY(12, HEIGHT_CONSOLE - 3); cout << speed;
 	GotoXY(12, HEIGHT_CONSOLE - 2); cout << 150 * speed - step;
 }
@@ -129,7 +131,6 @@ void drawGameMenu() {
 
 //draw effect when player hit the car
 void endGameMenu() {
-	
 	GotoXY(45, 2);  cout << "_";
 	GotoXY(42, 3);  cout << "_ooOoo_";
 	GotoXY(41, 4);  cout << "o8888888o";
@@ -236,6 +237,10 @@ void processDead() {
 void processPass(POINT& p) {
 	prevPos[speed - 1] = p.x;
 	if (speed == MAX_SPEED) {
+		for (int i = 0; i < 3; ++i) {
+			GotoXY(prevPos[i], 2);
+			cout << " ";
+		}
 		speed = 1;
 	}
 	else {
@@ -317,7 +322,7 @@ void eraseCars() {
 			speedUP = 0;
 			do {
 				GotoXY(carArray[i][0 + speedUP], i + 3);
-				printf(" ");
+				cout << " ";
 				speedUP++;
 			} while (speedUP < speed);
 		}
