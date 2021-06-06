@@ -85,6 +85,8 @@ void resetData() {
 		carArray = new int* [MAX_CAR];
 	if (carInfo == NULL)
 		carInfo = new CAR[MAX_CAR];
+
+	srand((unsigned)time(NULL));
 	for (int i = 0; i < MAX_CAR; i++) {
 		carInfo[i].direction = rand() % 2;
 		carInfo[i].length = MIN_CAR_LENGTH + rand() % (MAX_CAR_LENGTH - MIN_CAR_LENGTH + 1);

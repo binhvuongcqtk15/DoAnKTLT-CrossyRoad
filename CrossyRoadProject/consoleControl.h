@@ -13,8 +13,8 @@ void FixConsoleWindow() {
 // run sub thread side-by-side main thread
 void subThread() {
 	// make game stop for a while, depend on current level
-	bool delay = false;
-	int time2stop = speed * 3 + 1;
+	int delay = 0;
+	int time2stop = speed * 5 + 1;
 	while (1) {
 		if (state) {
 			switch (direction) {
@@ -27,34 +27,36 @@ void subThread() {
 			//check player lose or not
 			if (isImpact(player_pos)) {
 				processDead();
-				continue;
+				delay = 1;
+				time2stop = 0;
 			}
-			GotoXY(40, 27);
-			cout << delay << " " << time2stop << "\n";
 			// start clock to delay
-			delay == true ? time2stop++ : time2stop--;
-			if (time2stop == 0 || time2stop == speed * 3 + 1)
-				delay = !delay;
-			if (!delay) {
+			delay == 1 ? time2stop++ : time2stop--;
+			if (time2stop == 0)
+				delay = 1;
+			else if (time2stop == speed * 5 + 1)
+				delay = 0;
+			if (delay == 0) {
 				eraseCars();
 				moveCars();
 				drawCars("=");
 				drawInfo();
-				drawBox(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
-				drawBox(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
 			}
 			//check if player pass the level
 			if (player_pos.y == 2) {
-				if (player_pos.x == prevPos[0] || player_pos.x == prevPos[1]) 
+				if (player_pos.x == prevPos[0] || player_pos.x == prevPos[1]) {
 					processDead();
+					delay = 1;
+					time2stop = 0;
+				}
 				else {
 					processPass(player_pos);
-					time2stop = speed * 3 + 1;
-					delay = false;
+					delay = 0;
+					time2stop = speed * 5 + 1;
 				}
 			}
+			// sleep with time that clock has already calculated
+			Sleep(time2stop);
 		}
-		// sleep with time that clock has already calculated
-		Sleep(time2stop);
 	}
 }

@@ -8,7 +8,6 @@ using namespace std;
 int main() {
 	int temp;
 	FixConsoleWindow();
-	srand((unsigned)time(NULL));
 	thread t1(subThread);
 	while (1) {
 		startMenu();
@@ -16,7 +15,6 @@ int main() {
 			temp = toupper(_getch()); // wait for input from user, make it capitalize
 			if (temp == 'L') {
 				resetData();
-				pauseGame(t1.native_handle());
 				GotoXY(0, PLAYGROUND_SECTION_HEIGHT + 2);
 				printf("Enter your name to continue playing: ");
 				while (1) {
@@ -54,15 +52,16 @@ int main() {
 				cout << "It's not an option. Please choose again.";
 			}
 		}
-		resumeGame(t1.native_handle());
 		while (1) {
-			pausing = false;
 			temp = toupper(_getch());
 			if (state) {
 				if (temp == 27) {
 					state = 0;
+					//eraseCars();
 					system("cls");
-					break;
+					//fillBox(0, 0, WIDTH_CONSOLE, HEIGHT_CONSOLE, " ");
+					//break;
+					//continue;
 				}
 				else if (temp == 'P')
 					pauseGame(t1.native_handle());
@@ -88,8 +87,7 @@ int main() {
 					saveGame(player_name, player_pos);
 					GotoXY(50, 15);
 					cout << "Your game have been saved to the file " << player_name << ".txt";
-					system("cls");
-					break;
+					continue;
 				}
 				else if (temp == 'D' || temp == 'A' || temp == 'W' || temp == 'S') {
 					resumeGame(t1.native_handle());
@@ -97,9 +95,16 @@ int main() {
 				}
 			}
 			else {
+				//system("pause");
 				// when player lose
+				/*if (temp == 0 && interrupt == 1) {
+					//cout << temp;
+					//system("pause");
+					eraseCars();
+					system("cls");
+					break;
+				}*/
 				if (temp == 'R') {
-					state = 1;
 					startGame();
 				}
 				else {
