@@ -39,7 +39,7 @@ void subThread() {
 			if (delay == 0) {
 				eraseCars();
 				moveCars();
-				drawCars("=");
+				drawCars();
 				drawInfo();
 			}
 			//check if player pass the level

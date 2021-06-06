@@ -86,7 +86,7 @@ void GotoXY(int x, int y) {
 }
 
 // set color for text
-void set_color(int code) {
+void setTextColor(int code) {
 	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(color, code);
 }

@@ -64,18 +64,19 @@ void loadGame(string player_name, POINT &player_pos) {
 		for (int j = 0; j < carInfo[i].length; j++)
 			fileInput >> carArray[i][j];
 	}
+	setTextColor(6);
 	for (int i = 0; i < speed; ++i) {
 		fileInput >> prevPos[i];
-		GotoXY(prevPos[i], 2);
-		cout << "Y";
+		drawCharacter({ prevPos[i], 2 }, "Y");
+
+		//cout << "Y";
 	}
 	fileInput >> player_pos.x >> player_pos.y;
 	fileInput.close();
-	drawCars("=");
 	drawCharacter(player_pos, "Y");
+	drawCars();
 	drawInfo();
 	drawGameMenu();
 	drawBox(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
 	drawBox(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
-
 }
