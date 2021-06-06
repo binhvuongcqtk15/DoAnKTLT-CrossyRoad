@@ -69,6 +69,7 @@ void GotoXY(int x, int y) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
+// set color for text
 void set_color(int code) {
 	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(color, code);

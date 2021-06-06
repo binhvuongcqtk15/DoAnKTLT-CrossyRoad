@@ -5,7 +5,7 @@
 using namespace std;
 
 // erase memory in hard drive
-void deleteCar() {
+void deleteCarData() {
 	if (carArray == NULL || carInfo == NULL)
 		return;
 	for (int i = 0; i < MAX_CAR; i++)
@@ -34,7 +34,7 @@ void startGame() {
 void exitGame(HANDLE t) {
 	system("cls"); 
 	TerminateThread(t, 0);
-	deleteCar();
+	deleteCarData();
 	exit(1);
 }
 
@@ -75,6 +75,7 @@ void loadGame(string player_name, POINT &player_pos) {
 	fileInput >> speed >> step;
 	for (int i = 0; i < MAX_CAR; i++) {
 		fileInput >> carInfo[i].length >> carInfo[i].direction;
+		carArray[i] = new int[carInfo[i].length];
 		for (int j = 0; j < carInfo[i].length; j++)
 			fileInput >> carArray[i][j];
 	}
@@ -88,4 +89,8 @@ void loadGame(string player_name, POINT &player_pos) {
 	drawCars("=");
 	drawCharacter(player_pos, "Y");
 	drawInfo();
+	drawGameMenu();
+	drawBox(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
+	drawBox(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
+
 }

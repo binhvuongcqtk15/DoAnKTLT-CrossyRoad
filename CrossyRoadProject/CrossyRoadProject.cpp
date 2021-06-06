@@ -6,7 +6,7 @@
 using namespace std;
 
 int main() {
-	int temp;
+	int temp, interrupt = 0;
 	FixConsoleWindow();
 	thread t1(subThread);
 	while (1) {
@@ -53,15 +53,21 @@ int main() {
 			}
 		}
 		while (1) {
+			if (interrupt == 1) {
+				system("cls");
+				interrupt = 0;
+				break;
+			}
 			temp = toupper(_getch());
 			if (state) {
 				if (temp == 27) {
 					state = 0;
 					//eraseCars();
-					system("cls");
+					//system("cls");
 					//fillBox(0, 0, WIDTH_CONSOLE, HEIGHT_CONSOLE, " ");
 					//break;
 					//continue;
+					interrupt = 1;
 				}
 				else if (temp == 'P')
 					pauseGame(t1.native_handle());

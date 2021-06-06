@@ -30,7 +30,7 @@ void subThread() {
 				delay = 1;
 				time2stop = 0;
 			}
-			// start clock to delay
+			//start a loop to choose when to stop all car
 			delay == 1 ? time2stop++ : time2stop--;
 			if (time2stop == 0)
 				delay = 1;
@@ -56,7 +56,7 @@ void subThread() {
 				}
 			}
 			// sleep with time that clock has already calculated
-			Sleep(time2stop);
+			Sleep(10);
 		}
 	}
 }
