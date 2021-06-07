@@ -293,8 +293,8 @@ void drawCars() {
 	setTextColor(8);
 	for (int i = 0; i < MAX_CAR; i++) {
 		string curCar(carInfo[i].length, char(223));
-		curCar[1] = char(79);
-		curCar[carInfo[i].length - 2] = char(79);
+		curCar[1] = char(15);
+		curCar[carInfo[i].length - 2] = char(15);
 		if (carInfo[i].direction == 1) {
 			curCar[0] = char(96);
 			curCar[carInfo[i].length - 1] = char(62);
