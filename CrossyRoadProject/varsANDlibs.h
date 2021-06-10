@@ -12,7 +12,7 @@ using namespace std;
 
 const int MAX_CAR = 21; // number of car in console, each car in one line
 const int MIN_CAR_LENGTH = 20; // min length of a car
-const int MAX_CAR_LENGTH = 50; // max length of a car
+const int MAX_CAR_LENGTH = 40; // max length of a car
 const int MAX_SPEED = 3; // max speed of a car, also max level can access
 
 //Console parameter

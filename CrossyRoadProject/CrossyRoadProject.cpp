@@ -10,13 +10,15 @@ int main() {
 	FixConsoleWindow();
 	thread t1(subThread);
 	while (1) {
-		cout << "OK1";
+
+		system("cls");
 		startMenu();
 		while (1) {
 			temp = toupper(_getch()); // wait for input from user, make it capitalize
 			if (temp == 'L') {
 				resetData();
-				GotoXY(0, PLAYGROUND_SECTION_HEIGHT + 2);
+				fillBox(0, PLAYGROUND_SECTION_HEIGHT + 2, WIDTH_CONSOLE, 0, " ");
+				GotoXY(5, PLAYGROUND_SECTION_HEIGHT + 2);
 				setTextColor(3);
 				cout << "Enter your name to continue playing: ";
 				while (1) {
@@ -25,13 +27,14 @@ int main() {
 					// check if file exist or not, if not, ask again
 					if (!isFileExist(player_name)) {
 						fillBox(0, PLAYGROUND_SECTION_HEIGHT + 2, WIDTH_CONSOLE, 0, " ");
-						GotoXY(0, PLAYGROUND_SECTION_HEIGHT + 2);
+						GotoXY(5, PLAYGROUND_SECTION_HEIGHT + 2);
 						setTextColor(3);
 						cout << "Can't find ";
 						setTextColor(6);
 						cout << player_name << "'s";
+
 						setTextColor(3);
-						cout << " data.Please re - enter: ";
+						cout << " data.Please re-enter: ";
 					}
 					else
 						break;
@@ -57,7 +60,7 @@ int main() {
 				startMenu();
 			}
 			else {
-				GotoXY(5, 25); setTextColor(6);
+				GotoXY(5, PLAYGROUND_SECTION_HEIGHT + 2); setTextColor(6);
 				cout << "It's not an option. Please choose again.";
 			}
 		}
@@ -65,8 +68,8 @@ int main() {
 			temp = toupper(_getch());
 			if (state) {
 				if (temp == 27) {
-					state = 0;
-					pauseGame(t1.native_handle());
+					state = 0; // Another way to pause game
+					Sleep(40); //Create a gap time for subThread to update "state" status to 0
 					break;
 				}
 				else if (temp == 'P')
@@ -74,17 +77,18 @@ int main() {
 				else if (temp == 'R')
 					resumeGame(t1.native_handle());
 				else if (temp == 'K') {
-					state = 0;
-					fillBox(0, 0, WIDTH_CONSOLE, HEIGHT_CONSOLE + 1, "*");
-					fillBox(0, 0, WIDTH_CONSOLE, HEIGHT_CONSOLE + 1, " ");
+					state = 0; // Another way to pause game
+					Sleep(60); //Create a gap time for subThread to update "state" status to 0
+					system("cls");
 					if (player_name == DEFAULT_PLAYER_NAME) {
-						GotoXY(45, 14);
+						GotoXY(35, 12);
+						setTextColor(3);
 						cout << "Enter your name : ";
 						setTextColor(6);
 						getline(cin, player_name);
 					}
 					else {
-						GotoXY(45, 14);
+						GotoXY(28, 12);
 						setTextColor(3);
 						cout << "Enter your new name or press Enter to save to the file ";
 						setTextColor(6);
@@ -98,7 +102,7 @@ int main() {
 							player_name = new_name;
 					}
 					saveGame(player_name, player_pos);
-					GotoXY(40, 15);
+					GotoXY(35, 13);
 					setTextColor(3);
 					cout << "Your game have been saved to the file ";
 					setTextColor(6);
@@ -123,6 +127,5 @@ int main() {
 				}
 			}
 		}
-		cout << "OK3";
 	}
 }

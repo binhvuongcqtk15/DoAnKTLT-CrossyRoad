@@ -124,21 +124,21 @@ void drawGameMenu() {
 	GotoXY(5, HEIGHT_CONSOLE - 2); cout << "Score: " << 150 * speed - step;
 
 	for (int i = 2; i < INFO_SECTION_HEIGHT + 1; ++i) {
-		GotoXY(50, HEIGHT_CONSOLE - i);
+		GotoXY(40, HEIGHT_CONSOLE - i);
 		cout << char(179);
-		GotoXY(74, HEIGHT_CONSOLE - i);
+		GotoXY(64, HEIGHT_CONSOLE - i);
 		cout << char(179);
-		GotoXY(98, HEIGHT_CONSOLE - i);
+		GotoXY(86, HEIGHT_CONSOLE - i);
 		cout << char(179);
 	}
 
-	GotoXY(51, HEIGHT_CONSOLE - 3); cout << " Move   " << char(16) << "   W,A,S,D ";
+	GotoXY(41, HEIGHT_CONSOLE - 3); cout << " Move   " << char(16) << "   W, A, S, D ";
 	
-	GotoXY(75, HEIGHT_CONSOLE - 4); cout << " Pause Game    " << char(16) << "   P";
-	GotoXY(75, HEIGHT_CONSOLE - 3); cout << " Save Game     " << char(16) << "   K";
-	GotoXY(75, HEIGHT_CONSOLE - 2); cout << " Restart Game  " << char(16) << "   R";
+	GotoXY(65, HEIGHT_CONSOLE - 4); cout << " Pause Game    " << char(16) << "   P";
+	GotoXY(65, HEIGHT_CONSOLE - 3); cout << " Resume Game   " << char(16) << "   R"; 
+	GotoXY(65, HEIGHT_CONSOLE - 2); cout << " Save Game     " << char(16) << "   K";
 
-	GotoXY(99, HEIGHT_CONSOLE - 3); cout << " Exit   " << char(16) << "   Esc ";
+	GotoXY(87, HEIGHT_CONSOLE - 3); cout << " Return to Main Menu   " << char(16) << "   Esc ";
 	setTextColor(7);
 }
 
@@ -294,14 +294,14 @@ void drawCars() {
 	for (int i = 0; i < MAX_CAR; i++) {
 		string curCar(carInfo[i].length, char(223));
 		curCar[1] = char(15);
-		curCar[carInfo[i].length - 2] = char(15);
+		curCar[curCar.length() - 2] = char(15);
 		if (carInfo[i].direction == 1) {
 			curCar[0] = char(96);
-			curCar[carInfo[i].length - 1] = char(62);
+			curCar[curCar.length() - 1] = char(62);
 		}
 		else {
 			curCar[0] = char(60);
-			curCar[carInfo[i].length - 1] = char(39);
+			curCar[curCar.length() - 1] = char(39);
 		}
 		for (int j = 0; j < carInfo[i].length; j++) {
 			GotoXY(carArray[i][j], i + 3);
