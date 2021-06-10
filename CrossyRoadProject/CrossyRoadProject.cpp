@@ -10,7 +10,6 @@ int main() {
 	FixConsoleWindow();
 	thread t1(subThread);
 	while (1) {
-
 		system("cls");
 		startMenu();
 		while (1) {
@@ -45,7 +44,6 @@ int main() {
 			}
 			else if (temp == 'N') {
 				startGame();
-				resumeGame(t1.native_handle());
 				break;
 			}
 			else if (temp == 27) {
@@ -108,7 +106,7 @@ int main() {
 					setTextColor(6);
 					cout << player_name << ".txt";
 					setTextColor(7);
-					continue;
+					break;
 				}
 				else if (temp == 'D' || temp == 'A' || temp == 'W' || temp == 'S') {
 					resumeGame(t1.native_handle());
