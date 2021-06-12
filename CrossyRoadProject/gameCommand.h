@@ -68,8 +68,6 @@ void loadGame(string player_name, POINT &player_pos) {
 	for (int i = 0; i < speed; ++i) {
 		fileInput >> prevPos[i];
 		drawCharacter({ prevPos[i], 2 }, "Y");
-
-		//cout << "Y";
 	}
 	fileInput >> player_pos.x >> player_pos.y;
 	fileInput.close();
@@ -77,6 +75,4 @@ void loadGame(string player_name, POINT &player_pos) {
 	drawCars();
 	drawInfo();
 	drawGameMenu();
-	drawBox(0, 0, WIDTH_CONSOLE, PLAYGROUND_SECTION_HEIGHT);
-	drawBox(0, PLAYGROUND_SECTION_HEIGHT + 1, WIDTH_CONSOLE, INFO_SECTION_HEIGHT);
 }
