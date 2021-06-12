@@ -9,6 +9,7 @@ int main() {
 	int temp;
 	FixConsoleWindow();
 	thread t1(subThread);
+	
 	while (1) {
 		system("cls");
 		startMenu();
