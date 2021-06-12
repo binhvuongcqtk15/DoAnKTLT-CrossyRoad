@@ -11,6 +11,7 @@ void moveRight() {
 	player_pos.x++;
 	drawCharacter(player_pos, "Y");
 }
+
 void moveLeft() {
 	step++;
 	drawCharacter(player_pos, " ");
@@ -19,6 +20,7 @@ void moveLeft() {
 	player_pos.x--;
 	drawCharacter(player_pos, "Y");
 }
+
 void moveDown() {
 	if (player_pos.y < PLAYGROUND_SECTION_HEIGHT) {
 		step++;
@@ -27,6 +29,7 @@ void moveDown() {
 		drawCharacter(player_pos, "Y");
 	}
 }
+
 void moveUp() {
 	if (player_pos.y > 2) {
 		step++;
