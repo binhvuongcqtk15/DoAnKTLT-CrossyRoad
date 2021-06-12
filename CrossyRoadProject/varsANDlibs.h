@@ -39,7 +39,6 @@ POINT player_pos; // show where is player's current position
 int speedUP = 0; // use to speed up car
 int direction, speed, step; //direction = W, A, S, D; speed = level = 1, 2, 3;
 bool state; // Dead = 0, Alive = 1;
-bool pausing = false; // true: game is pausing, false: game is running
 int prevPos[5]; // player position in previous level
 string player_name; // player name
 
@@ -47,19 +46,13 @@ string player_name; // player name
 POINT ghost_pos;
 int ghost_height = 5, ghost_width = 7;
 string ghost_shape[5] = { " .-.   " , "(o o)  " , "| O \\  ", " \\   \\ " , "  `~~~'" };
-/*
-	console be like: 
-	(0, 0)--------------------> x
-		 |
-		 |
-		 |
-		 |
-		 |
-		 |
-		 |
-		 v
-		 y
-*/
+
+void FixConsoleWindow() {
+	HWND consoleWindow = GetConsoleWindow();
+	LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
+	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME);
+	SetWindowLong(consoleWindow, GWL_STYLE, style);
+}
 
 // erase memory in hard drive
 void deleteCarData() {
