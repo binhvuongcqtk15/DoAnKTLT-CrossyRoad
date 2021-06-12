@@ -24,6 +24,146 @@ void fillBox(int x, int y, int width, int height, string s) {
 	}
 }
 
+// decide what to do when player lose
+void processDead() {
+	ghost_pos.y = max(player_pos.y, 8);
+	ghost_pos.x = min(player_pos.x, WIDTH_CONSOLE - 8);
+
+	setTextColor(8);
+	for (int i = PLAYGROUND_SECTION_HEIGHT; i > ghost_pos.y; --i) {
+		fillBox(1, i, 4, 0, "X_X");
+		fillBox(4, i, WIDTH_CONSOLE - 7, 0, "   X_X");
+	}
+	while (ghost_pos.y > 5) {
+		fillBox(1, ghost_pos.y + 1, 4, 0, "X_X");
+		fillBox(4, ghost_pos.y + 1, WIDTH_CONSOLE - 7, 0, "   X_X");
+		for (int i = ghost_height - 1; i >= 0; i--) {
+			fillBox(1, ghost_pos.y - i, WIDTH_CONSOLE - 2, 0, " ");
+			GotoXY(ghost_pos.x, ghost_pos.y - i); 
+			setTextColor(6);
+			cout << ghost_shape[ghost_height - i - 1];
+		}
+		ghost_pos.y--;
+		Sleep(75);
+	}
+	while (ghost_pos.y > 0) {
+		fillBox(1, ghost_pos.y + 1, 4, 0, "X_X");
+		fillBox(4, ghost_pos.y + 1, WIDTH_CONSOLE - 7, 0, "   X_X");
+		for (int i = ghost_pos.y - 2; i >= 0; i--) {
+			fillBox(1, ghost_pos.y - i, WIDTH_CONSOLE - 2, 0, " ");
+			GotoXY(ghost_pos.x, ghost_pos.y - i);
+			setTextColor(6);
+			cout << ghost_shape[ghost_height - i - 1];
+		}
+		ghost_pos.y--;
+		Sleep(100);
+	}
+	fillBox(1, 1, WIDTH_CONSOLE - 2, HEIGHT_CONSOLE - 3, " ");
+	Sleep(250);
+	endGameMenu();
+	setTextColor(7);
+}
+
+// decide what to do when player win a level
+void processPass(POINT& p) {
+	prevPos[speed - 1] = p.x;
+	if (speed == MAX_SPEED) {
+		for (int i = 0; i < 3; ++i) {
+			GotoXY(prevPos[i], 2);
+			cout << " ";
+		}
+		speed = 1;
+	}
+	else {
+		speed++;
+		for (int i = 0; i < MAX_CAR; ++i)
+			carInfo[i].direction = rand() % 2;
+
+	}
+	prevPos[speed - 1] = p.x;
+	p = DEFAULT_CHARACTER_POS;
+	direction = 'D';
+}
+
+// draw character s at position p a.k.a (p.x, p.y)
+void drawCharacter(const POINT& p, string s) {
+	setTextColor(6);
+	GotoXY(p.x, p.y);
+	cout << s;
+	setTextColor(7);
+}
+
+// draw car in console
+void drawCars() {
+	setTextColor(8);
+	for (int i = 0; i < MAX_CAR; i++) {
+		string curCar(carInfo[i].length, char(223));
+		curCar[1] = char(15);
+		curCar[curCar.length() - 2] = char(15);
+		if (carInfo[i].direction == 1) {
+			curCar[0] = char(96);
+			curCar[curCar.length() - 1] = char(62);
+		}
+		else {
+			curCar[0] = char(60);
+			curCar[curCar.length() - 1] = char(39);
+		}
+		for (int j = 0; j < carInfo[i].length; j++) {
+			GotoXY(carArray[i][j], i + 3);
+			cout << curCar[j];
+		}
+	}
+	setTextColor(7);
+}
+
+// make car move around
+void moveCars() {
+	for (int i = 0; i < MAX_CAR; i++) {
+		if (carInfo[i].direction == 1) {
+			speedUP = 0;
+			do {
+				speedUP++;
+				for (int j = 0; j < carInfo[i].length - 1; j++) {
+					carArray[i][j] = carArray[i][j + 1];
+				}
+				carArray[i][carInfo[i].length - 1] + 1 == WIDTH_CONSOLE ? carArray[i][carInfo[i].length - 1] = 1 : carArray[i][carInfo[i].length - 1]++;
+			} while (speedUP < speed);
+		}
+		if (carInfo[i].direction == 0) {
+			speedUP = 0;
+			do {
+				speedUP++;
+				for (int j = carInfo[i].length - 1; j > 0; j--) {
+					carArray[i][j] = carArray[i][j - 1];
+				}
+				carArray[i][0] - 1 == 0 ? carArray[i][0] = WIDTH_CONSOLE - 1 : carArray[i][0]--;
+			} while (speedUP < speed);
+		}
+	}
+}
+
+// erase car, also use to change car position
+void eraseCars() {
+	for (int i = 0; i < MAX_CAR; i++) {
+		if (carInfo[i].direction == 0) {
+			speedUP = 0;
+			do {
+				GotoXY(carArray[i][carInfo[i].length - 1 - speedUP], i + 3);
+				cout << " ";
+				speedUP++;
+			} while (speedUP < speed);
+		}
+		if (carInfo[i].direction == 1) {
+			speedUP = 0;
+			do {
+				GotoXY(carArray[i][0 + speedUP], i + 3);
+				cout << " ";
+				speedUP++;
+			} while (speedUP < speed);
+		}
+	}
+}
+
 // draw select box in Menu for user to choose action at (x, y)
 void drawSelectBox(int x, int y, int width, int height) {
 	setTextColor(3);
@@ -219,142 +359,3 @@ void startMenu() {
 	GotoXY(0, 0);
 }
 
-// decide what to do when player lose
-void processDead() {
-	ghost_pos.y = max(player_pos.y, 8);
-	ghost_pos.x = min(player_pos.x, WIDTH_CONSOLE - 8);
-
-	setTextColor(8);
-	for (int i = PLAYGROUND_SECTION_HEIGHT; i > ghost_pos.y; --i) {
-		fillBox(1, i, 4, 0, "X_X");
-		fillBox(4, i, WIDTH_CONSOLE - 7, 0, "   X_X");
-	}
-	while (ghost_pos.y > 5) {
-		fillBox(1, ghost_pos.y + 1, 4, 0, "X_X");
-		fillBox(4, ghost_pos.y + 1, WIDTH_CONSOLE - 7, 0, "   X_X");
-		for (int i = ghost_height - 1; i >= 0; i--) {
-			fillBox(1, ghost_pos.y - i, WIDTH_CONSOLE - 2, 0, " ");
-			GotoXY(ghost_pos.x, ghost_pos.y - i); 
-			setTextColor(6);
-			cout << ghost_shape[ghost_height - i - 1];
-		}
-		ghost_pos.y--;
-		Sleep(75);
-	}
-	while (ghost_pos.y > 0) {
-		fillBox(1, ghost_pos.y + 1, 4, 0, "X_X");
-		fillBox(4, ghost_pos.y + 1, WIDTH_CONSOLE - 7, 0, "   X_X");
-		for (int i = ghost_pos.y - 2; i >= 0; i--) {
-			fillBox(1, ghost_pos.y - i, WIDTH_CONSOLE - 2, 0, " ");
-			GotoXY(ghost_pos.x, ghost_pos.y - i);
-			setTextColor(6);
-			cout << ghost_shape[ghost_height - i - 1];
-		}
-		ghost_pos.y--;
-		Sleep(100);
-	}
-	fillBox(1, 1, WIDTH_CONSOLE - 2, HEIGHT_CONSOLE - 3, " ");
-	Sleep(250);
-	endGameMenu();
-	setTextColor(7);
-}
-
-// decide what to do when player win a level
-void processPass(POINT& p) {
-	prevPos[speed - 1] = p.x;
-	if (speed == MAX_SPEED) {
-		for (int i = 0; i < 3; ++i) {
-			GotoXY(prevPos[i], 2);
-			cout << " ";
-		}
-		speed = 1;
-	}
-	else {
-		speed++;
-		for (int i = 0; i < MAX_CAR; ++i)
-			carInfo[i].direction = rand() % 2;
-
-	}
-	prevPos[speed - 1] = p.x;
-	p = DEFAULT_CHARACTER_POS;
-	direction = 'D';
-}
-
-// draw character s at position p a.k.a (p.x, p.y)
-void drawCharacter(const POINT& p, string s) {
-	setTextColor(6);
-	GotoXY(p.x, p.y);
-	cout << s;
-	setTextColor(7);
-}
-
-// draw car in console
-void drawCars() {
-	setTextColor(8);
-	for (int i = 0; i < MAX_CAR; i++) {
-		string curCar(carInfo[i].length, char(223));
-		curCar[1] = char(15);
-		curCar[curCar.length() - 2] = char(15);
-		if (carInfo[i].direction == 1) {
-			curCar[0] = char(96);
-			curCar[curCar.length() - 1] = char(62);
-		}
-		else {
-			curCar[0] = char(60);
-			curCar[curCar.length() - 1] = char(39);
-		}
-		for (int j = 0; j < carInfo[i].length; j++) {
-			GotoXY(carArray[i][j], i + 3);
-			cout << curCar[j];
-		}
-	}
-	setTextColor(7);
-}
-
-// make car move around
-void moveCars() {
-	for (int i = 0; i < MAX_CAR; i++) {
-		if (carInfo[i].direction == 1) {
-			speedUP = 0;
-			do {
-				speedUP++;
-				for (int j = 0; j < carInfo[i].length - 1; j++) {
-					carArray[i][j] = carArray[i][j + 1];
-				}
-				carArray[i][carInfo[i].length - 1] + 1 == WIDTH_CONSOLE ? carArray[i][carInfo[i].length - 1] = 1 : carArray[i][carInfo[i].length - 1]++;
-			} while (speedUP < speed);
-		}
-		if (carInfo[i].direction == 0) {
-			speedUP = 0;
-			do {
-				speedUP++;
-				for (int j = carInfo[i].length - 1; j > 0; j--) {
-					carArray[i][j] = carArray[i][j - 1];
-				}
-				carArray[i][0] - 1 == 0 ? carArray[i][0] = WIDTH_CONSOLE - 1 : carArray[i][0]--;
-			} while (speedUP < speed);
-		}
-	}
-}
-
-// erase car, also use to change car position
-void eraseCars() {
-	for (int i = 0; i < MAX_CAR; i++) {
-		if (carInfo[i].direction == 0) {
-			speedUP = 0;
-			do {
-				GotoXY(carArray[i][carInfo[i].length - 1 - speedUP], i + 3);
-				cout << " ";
-				speedUP++;
-			} while (speedUP < speed);
-		}
-		if (carInfo[i].direction == 1) {
-			speedUP = 0;
-			do {
-				GotoXY(carArray[i][0 + speedUP], i + 3);
-				cout << " ";
-				speedUP++;
-			} while (speedUP < speed);
-		}
-	}
-}
