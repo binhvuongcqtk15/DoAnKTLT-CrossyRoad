@@ -34,7 +34,8 @@ void subThread() {
 				moveCars();
 				drawCars();
 			}
-			drawInfo();
+			if(state)
+				drawInfo();
 			//check if player pass the level
 			if (player_pos.y == 2) {
 				if (player_pos.x == prevPos[0] || player_pos.x == prevPos[1]) {
