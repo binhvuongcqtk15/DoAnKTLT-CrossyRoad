@@ -253,7 +253,7 @@ void drawInfo() {
 	GotoXY(12, HEIGHT_CONSOLE - 3); cout << "     ";
 	GotoXY(12, HEIGHT_CONSOLE - 2); cout << "     ";
 	GotoXY(12, HEIGHT_CONSOLE - 3); cout << speed;
-	GotoXY(12, HEIGHT_CONSOLE - 2); cout << 150 * speed - step;
+	GotoXY(12, HEIGHT_CONSOLE - 2); cout << max(0, 150 * speed - step);
 	setTextColor(7);
 }
 
