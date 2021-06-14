@@ -9,9 +9,8 @@ Người thực hiện:
       + Trần Hoàng Phương Nam
 
 Tài liệu báo cáo, video demo game, slide thuyết trình: 
-      + Báo cáo:
-      + Slide:
-      + Video:
+      + Link Google Drive tải source code, báo cáo, slide thuyết trình: https://drive.google.com/drive/folders/1rdeXWziPGMLUGkT2ipH6EIZKbTgdlmzi?usp=sharing
+      + Link Demo game trên Youtube: https://www.youtube.com/watch?v=Vq_Tl3jDRRA
 
 Nguồn tham khảo: 
 
