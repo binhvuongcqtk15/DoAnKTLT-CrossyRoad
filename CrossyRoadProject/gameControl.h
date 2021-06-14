@@ -2,6 +2,8 @@
 #include "varsANDlibs.h"
 using namespace std;
 
+void endGameMenu();
+
 // check if player impact with car
 bool isImpact(const POINT& p) {
 	if (player_pos.y == 2 || player_pos.y == 24)
